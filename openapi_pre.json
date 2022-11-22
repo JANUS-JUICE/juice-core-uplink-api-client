@@ -1,0 +1,3265 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Juice Core Uplink API",
+    "description": "An API to JUICE CORE uplink subsystem.",
+    "contact": {
+      "name": "JUICE Science Operations Centre",
+      "email": "juice_soc@sciops.esa.int"
+    },
+    "license": {
+      "name": "BSD License"
+    },
+    "version": "v1"
+  },
+  "security": [
+    {
+      "JWT": []
+    }
+  ],
+  "paths": {
+    "/api-token-auth/": {
+      "post": {
+        "operationId": "api-token-auth_create",
+        "summary": "API View that receives a POST with a user's username and password.",
+        "description": "Returns a JSON Web Token that can be used for authenticated requests.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JSONWebToken"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JSONWebToken"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "api-token-auth"
+        ]
+      },
+      "parameters": []
+    },
+    "/api-token-refresh/": {
+      "post": {
+        "operationId": "api-token-refresh_create",
+        "summary": "API View that returns a refreshed token (with new expiration) based on\nexisting token",
+        "description": "If 'orig_iat' field (original issued-at-time) is found, will first check\nif it's within expiration window, then copy it to the new token",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshJSONWebToken"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefreshJSONWebToken"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "api-token-refresh"
+        ]
+      },
+      "parameters": []
+    },
+    "/rest_api/checks/": {
+      "get": {
+        "operationId": "rest_api_checks_list",
+        "summary": "Retrieve the consistency checks to be performed",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Consistency checks list"
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": []
+    },
+    "/rest_api/checks/{working_group_mnemonic}/": {
+      "get": {
+        "operationId": "rest_api_checks_read",
+        "summary": "Checks the segment definition completeness of working group",
+        "description": "Checks the segment definition completeness of working group",
+        "responses": {
+          "200": {
+            "description": "List of segment definitions not valid"
+          },
+          "404": {
+            "description": "Error checking the completeness"
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": [
+        {
+          "name": "working_group_mnemonic",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/rest_api/config/": {
+      "get": {
+        "operationId": "rest_api_config_list",
+        "summary": "Retrieve the auxiliary configuration data",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Configuration"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": []
+    },
+    "/rest_api/detailed_scenario/": {
+      "get": {
+        "operationId": "rest_api_detailed_scenario_list",
+        "summary": "Retrieve the list of detailed scenarios",
+        "description": "List the PUBLIC plans available in the system",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetailedScenarioList"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "post": {
+        "operationId": "rest_api_detailed_scenario_create",
+        "summary": "Adds a new detailed scenario",
+        "description": "Adds a new plan to the trajectory",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DetailedScenario"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetailedScenario"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bad request"
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": []
+    },
+    "/rest_api/detailed_scenario/{id}/": {
+      "get": {
+        "operationId": "rest_api_detailed_scenario_read",
+        "summary": "Retrieve a detailed scenario",
+        "description": "Retrieve, update or delete a segmentation instance.",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetailedScenario"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Detailed scenario not found"
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/rest_api/eps_package/": {
+      "post": {
+        "operationId": "rest_api_eps_package_create",
+        "summary": "Generates a EPS package for a plan",
+        "description": "Adds a new plan to the trajectory",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Plan"
+        },
+        "responses": {
+          "200": {
+            "description": "Zip file with the eps package"
+          },
+          "401": {
+            "description": "Bad request"
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": []
+    },
+    "/rest_api/events/": {
+      "get": {
+        "operationId": "rest_api_events_list",
+        "summary": "Retrieve the geometry events of a trajectory",
+        "description": "Restricts the returned queries by filtering against a **body** query parameter in the URL.\nThe **body** expected value is the JSON string corresponding to the following structure:\n* start: the date formatted as ISO8601 in UTC scale (2030-07-05T01:44:47Z)\n* end: the date formatted as ISO8601 in UTC scale (2030-07-05T01:44:47Z)\n* trajectory: the name of the trajectory\n* mnemonics: a list of the names of the events mnemonics",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Event"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "body parameter not parseable or not present"
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": []
+    },
+    "/rest_api/file/{filename}/": {
+      "get": {
+        "operationId": "rest_api_file_read",
+        "summary": "Retrieve a file from SHT storage",
+        "description": "Get a file saved in the SHT storage",
+        "responses": {
+          "200": {
+            "description": "TextFile"
+          },
+          "400": {
+            "description": "The file requested is not available"
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": [
+        {
+          "name": "filename",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/rest_api/mode/": {
+      "get": {
+        "operationId": "rest_api_mode_list",
+        "summary": "Retrieve the list of modes",
+        "description": "Get the list of modes",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Mode"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": []
+    },
+    "/rest_api/observation_definition/": {
+      "get": {
+        "operationId": "rest_api_observation_definition_list",
+        "summary": "Retrieve the observation definition identified by the mnemonic",
+        "description": "Get the list of observation definitions available in the system",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObservationDefinition"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": []
+    },
+    "/rest_api/observation_definition/{mnemonic}/": {
+      "get": {
+        "operationId": "rest_api_observation_definition_read",
+        "summary": "Retrieve the observation definition identified by the mnemonic",
+        "description": "Get the observation definition details",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObservationDefinitionExtend"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Observation Definition not found"
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": [
+        {
+          "name": "mnemonic",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/rest_api/plan/": {
+      "get": {
+        "operationId": "rest_api_plan_list",
+        "summary": "Retrieve the list of available PUBLIC plans",
+        "description": "List the PUBLIC plans available in the system",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanList"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "post": {
+        "operationId": "rest_api_plan_create",
+        "summary": "Adds a new plan",
+        "description": "Adds a new plan to the trajectory",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Plan"
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Plan"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bad request"
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": []
+    },
+    "/rest_api/plan/{id}/": {
+      "get": {
+        "operationId": "rest_api_plan_read",
+        "summary": "Retrieve a plan",
+        "description": "Retrieve, update or delete a segmentation instance.",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReadOnlyPlan"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Plan not found"
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "put": {
+        "operationId": "rest_api_plan_update",
+        "summary": "Update a plan",
+        "description": "Retrieve, update or delete a segmentation instance.",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Plan"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Plan not found"
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "delete": {
+        "operationId": "rest_api_plan_delete",
+        "summary": "Delete a plan",
+        "description": "Retrieve, update or delete a segmentation instance.",
+        "responses": {
+          "204": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Plan"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Plan Not found"
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/rest_api/plan/{id}/ptr": {
+      "get": {
+        "operationId": "rest_api_plan_ptr_list",
+        "summary": "Retrieve a plan PTR",
+        "description": "Retrieve a PTR correspondig to a plan.",
+        "parameters": [
+          {
+            "name": "content",
+            "in": "query",
+            "description": "if \"link\" returns a JSON with the file link.if \"xml\" returns the file XML content.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "XML content or ptr link"
+          },
+          "404": {
+            "description": "Plan not found"
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/rest_api/plan/{id}/stats": {
+      "get": {
+        "operationId": "rest_api_plan_stats_list",
+        "summary": "Calculates time statistics of a plan.",
+        "description": "Retrieves statistics for a plan.",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanStats"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Plan not found"
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/rest_api/plan_ptr/": {
+      "post": {
+        "operationId": "rest_api_plan_ptr_create",
+        "summary": "Generates a JSON file with the pointing information filled",
+        "description": "Adds a new plan to the trajectory",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Plan"
+        },
+        "responses": {
+          "200": {
+            "description": "JSON file with the pointing information filled"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": []
+    },
+    "/rest_api/plan_ptr_xml/": {
+      "post": {
+        "operationId": "rest_api_plan_ptr_xml_create",
+        "summary": "Generates a XML PTR file with the pointing information filled",
+        "description": "Adds a new plan to the trajectory",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Plan"
+        },
+        "responses": {
+          "200": {
+            "description": "XML PTR file with the pointing information filled"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": []
+    },
+    "/rest_api/plan_simphony/groups/{id}/": {
+      "get": {
+        "operationId": "rest_api_plan_simphony_groups_read",
+        "summary": "Retrieve the groups information of a timeline",
+        "description": "Returns the segment group information providing the segments belonging to a given segment group,\ntheir duration and the resources associated to the group",
+        "responses": {
+          "200": {
+            "description": "Simphony Plan Serializer of groups"
+          },
+          "404": {
+            "description": "Plan not found"
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/rest_api/plan_simphony/opps/{id}/": {
+      "get": {
+        "operationId": "rest_api_plan_simphony_opps_read",
+        "summary": "Retrieve a plan timeline for Simphony subsystem",
+        "description": "Restricts the returned queries by filtering against a **body** query parameter in the URL.\nThe **body** expected value is the JSON string corresponding to the following structure:\n* start: the date formatted as ISO8601 in UTC scale (2030-07-05T01:44:47Z)\n* end: the date formatted as ISO8601 in UTC scale (2030-07-05T01:44:47Z)\n* mode: \"strict\" | \"open\" optional: \"open\" Includes the segments partially included in the period",
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          {
+            "name": "mode",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "strict",
+                "open"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimphonyPlan"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Plan not found"
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/rest_api/plan_simphony/timeline/{id}/": {
+      "get": {
+        "operationId": "rest_api_plan_simphony_timeline_read",
+        "summary": "Retrieve a plan timeline for Simphony subsystem",
+        "description": "Restricts the returned queries by filtering against a **body** query parameter in the URL.\nThe **body** expected value is the JSON string corresponding to the following structure:\n* start: the date formatted as ISO8601 in UTC scale (2030-07-05T01:44:47Z)\n* end: the date formatted as ISO8601 in UTC scale (2030-07-05T01:44:47Z)\n* mode: \"strict\" | \"open\" optional: \"open\" Includes the segments partially included in the period",
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          {
+            "name": "mode",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "strict",
+                "open"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimphonyPlan"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Plan not found"
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/rest_api/plan_simphony/{id}/": {
+      "get": {
+        "operationId": "rest_api_plan_simphony_read",
+        "summary": "Retrieve a plan timeline for Simphony subsystem",
+        "description": "Restricts the returned queries by filtering against a **body** query parameter in the URL.\nThe **body** expected value is the JSON string corresponding to the following structure:\n* start: the date formatted as ISO8601 in UTC scale (2030-07-05T01:44:47Z)\n* end: the date formatted as ISO8601 in UTC scale (2030-07-05T01:44:47Z)\n* mode: \"strict\" | \"open\" optional: \"open\" Includes the segments partially included in the period",
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          {
+            "name": "mode",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "strict",
+                "open"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimphonyPlan"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Plan not found"
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/rest_api/segment_definition/{mnemonic}/": {
+      "get": {
+        "operationId": "rest_api_segment_definition_read",
+        "summary": "Retrieve the segment definition identified by the mnemonic",
+        "description": "List all segment definition",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SegmentDefinition"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Segment Definition not found"
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": [
+        {
+          "name": "mnemonic",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/rest_api/series/": {
+      "get": {
+        "operationId": "rest_api_series_list",
+        "summary": "Retrieve a geometry series of a trajectory",
+        "description": "Restricts the returned queries by filtering against a **body** query parameter in the URL.\nThe **body** expected value is the JSON string corresponding to the following structure:\n* start: the date formatted as ISO8601 in UTC scale (2030-07-05T01:44:47Z)\n* end: the date formatted as ISO8601 in UTC scale (2030-07-05T01:44:47Z)\n* trajectory: the name of the trajectory\n* series: the name of the series to be retrieved",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SeriesData"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "body parameter not parseable or not present"
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": []
+    },
+    "/rest_api/session_flush/": {
+      "get": {
+        "operationId": "rest_api_session_flush_list",
+        "summary": "Flush the session",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Session flushed"
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": []
+    },
+    "/rest_api/trajectory/": {
+      "get": {
+        "operationId": "rest_api_trajectory_list",
+        "summary": "Retrieve the trajectory list",
+        "description": "List all trajectory",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TrajectoryList"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": []
+    },
+    "/rest_api/trajectory/{mnemonic}/": {
+      "get": {
+        "operationId": "rest_api_trajectory_read",
+        "summary": "Retrieve the trajectory identified by the mnemonic",
+        "description": "List all trajectory",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Trajectory"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Trajectory not found"
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": [
+        {
+          "name": "mnemonic",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/rest_api/trajectory/{mnemonic}/detailed_scenario": {
+      "get": {
+        "operationId": "rest_api_trajectory_detailed_scenario_list",
+        "summary": "Retrieve the detailed scenarios belonging to the trajectory",
+        "description": "List all the detailed scenarios belonging to the trajectory",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetailedScenarioList"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Trajectory not found"
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": [
+        {
+          "name": "mnemonic",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/rest_api/trajectory/{mnemonic}/engineering_segment_types": {
+      "get": {
+        "operationId": "rest_api_trajectory_engineering_segment_types_list",
+        "summary": "Retrieve the engineering segments belonging to the trajectory",
+        "description": "List all engineering segments types of a trajectory",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EngineeringSegmentType"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Trajectory not found"
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": [
+        {
+          "name": "mnemonic",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/rest_api/trajectory/{mnemonic}/engineering_segments": {
+      "get": {
+        "operationId": "rest_api_trajectory_engineering_segments_list",
+        "summary": "Retrieve the engineering segments belonging to the trajectory",
+        "description": "List all engineering segments of a trajectory",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EngineeringSegment"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Trajectory not found"
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": [
+        {
+          "name": "mnemonic",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/rest_api/trajectory/{mnemonic}/event": {
+      "get": {
+        "operationId": "rest_api_trajectory_event_list",
+        "summary": "Retrieve the events definitions applicable for the trajectory",
+        "description": "List all the geometry event definitions applicable to the trajectory",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SeriesDefinition"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Trajectory not found"
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": [
+        {
+          "name": "mnemonic",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/rest_api/trajectory/{mnemonic}/plan": {
+      "get": {
+        "operationId": "rest_api_trajectory_plan_list",
+        "summary": "Retrieve the plans belonging to the trajectory",
+        "description": "List all the plans belonging to the trajectory",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PlanList"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Trajectory not found"
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": [
+        {
+          "name": "mnemonic",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/rest_api/trajectory/{mnemonic}/ptr": {
+      "get": {
+        "operationId": "rest_api_trajectory_ptr_list",
+        "summary": "Retrieve a trajectory PTR",
+        "description": "Retrieve a PTR corresponding to a trajectory.",
+        "parameters": [
+          {
+            "name": "content",
+            "in": "query",
+            "description": "if \"link\" returns a JSON with the file link.if \"xml\" returns the file XML content.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "XML content or ptr link"
+          },
+          "404": {
+            "description": "Trajectory not found"
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": [
+        {
+          "name": "mnemonic",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/rest_api/trajectory/{mnemonic}/segment_definition": {
+      "get": {
+        "operationId": "trajectory_segment_definitions",
+        "summary": "Retrieve the segment definitions applicable for the trajectory",
+        "description": "List all the segment definitions applicable to the trajectory",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SegmentDefinition"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Trajectory not found"
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": [
+        {
+          "name": "mnemonic",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/rest_api/trajectory/{mnemonic}/series": {
+      "get": {
+        "operationId": "rest_api_trajectory_series_list",
+        "summary": "Retrieve the series definitions applicable for the trajectory",
+        "description": "List all the series applicable to the trajectory",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SeriesDefinition"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Trajectory not found"
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": [
+        {
+          "name": "mnemonic",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/rest_api/user/{username}/": {
+      "get": {
+        "operationId": "rest_api_user_read",
+        "summary": "Retrieve the user details by username",
+        "description": "API endpoint that allows users to be viewed or edited.",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": [
+        {
+          "name": "username",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "/rest_api/version/": {
+      "get": {
+        "operationId": "rest_api_version_list",
+        "summary": "Retrieve the api version",
+        "description": "Retrieve the version of the api",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiVersion"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        },
+        "tags": [
+          "rest_api"
+        ]
+      },
+      "parameters": []
+    }
+  },
+  "servers": [
+    {
+      "url": "https://juicesoc.esac.esa.int/"
+    }
+  ],
+  "components": {
+    "requestBodies": {
+      "Plan": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Plan"
+            }
+          }
+        },
+        "required": true
+      }
+    },
+    "securitySchemes": {
+      "JWT": {
+        "in": "header",
+        "name": "Authorization",
+        "type": "apiKey"
+      }
+    },
+    "schemas": {
+      "JSONWebToken": {
+        "required": [
+          "username",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "username": {
+            "title": "Username",
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "title": "Password",
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "RefreshJSONWebToken": {
+        "required": [
+          "token"
+        ],
+        "type": "object",
+        "properties": {
+          "token": {
+            "title": "Token",
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "ConfigurationItem": {
+        "required": [
+          "name",
+          "mnemonic"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1
+          },
+          "mnemonic": {
+            "title": "Mnemonic",
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
+          }
+        }
+      },
+      "Unit": {
+        "required": [
+          "name",
+          "mnemonic"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1
+          },
+          "mnemonic": {
+            "title": "Mnemonic",
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
+          },
+          "category": {
+            "title": "Category",
+            "type": "string",
+            "readOnly": true
+          }
+        }
+      },
+      "InstrumentType": {
+        "required": [
+          "name",
+          "mnemonic"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1
+          },
+          "mnemonic": {
+            "title": "Mnemonic",
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
+          },
+          "instrument_set": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "readOnly": true,
+            "uniqueItems": true
+          }
+        }
+      },
+      "ResourceCategory": {
+        "required": [
+          "name",
+          "mnemonic",
+          "category_type"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1
+          },
+          "mnemonic": {
+            "title": "Mnemonic",
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
+          },
+          "category_type": {
+            "title": "Category type",
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1
+          }
+        }
+      },
+      "PlatformPowerProfile": {
+        "required": [
+          "name",
+          "mnemonic",
+          "power"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1
+          },
+          "mnemonic": {
+            "title": "Mnemonic",
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
+          },
+          "power": {
+            "title": "Power",
+            "type": "number"
+          }
+        }
+      },
+      "Configuration": {
+        "required": [
+          "version"
+        ],
+        "type": "object",
+        "properties": {
+          "targets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConfigurationItem"
+            }
+          },
+          "instruments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConfigurationItem"
+            }
+          },
+          "units": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Unit"
+            }
+          },
+          "instrument_types": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InstrumentType"
+            }
+          },
+          "resource_categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResourceCategory"
+            }
+          },
+          "slew_policies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConfigurationItem"
+            }
+          },
+          "timelines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConfigurationItem"
+            }
+          },
+          "platform_power_profiles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PlatformPowerProfile"
+            }
+          },
+          "version": {
+            "title": "Version",
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
+          }
+        }
+      },
+      "DetailedScenarioList": {
+        "required": [
+          "trajectory",
+          "name",
+          "mnemonic"
+        ],
+        "type": "object",
+        "properties": {
+          "trajectory": {
+            "title": "Trajectory",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1
+          },
+          "created": {
+            "title": "Created",
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "mnemonic": {
+            "title": "Mnemonic",
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
+          },
+          "id": {
+            "title": "ID",
+            "type": "integer",
+            "readOnly": true
+          },
+          "author": {
+            "title": "Author",
+            "type": "string",
+            "readOnly": true
+          },
+          "description": {
+            "title": "Description",
+            "type": "string",
+            "maxLength": 1024,
+            "nullable": true
+          },
+          "scenario_json_file": {
+            "title": "Scenario json file",
+            "type": "string",
+            "readOnly": true,
+            "format": "uri"
+          },
+          "start": {
+            "title": "Start",
+            "type": "string",
+            "maxLength": 64,
+            "nullable": true
+          },
+          "end": {
+            "title": "End",
+            "type": "string",
+            "maxLength": 64,
+            "nullable": true
+          }
+        }
+      },
+      "DetailedScenario": {
+        "required": [
+          "trajectory",
+          "mnemonic",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "ID",
+            "type": "integer",
+            "readOnly": true
+          },
+          "trajectory": {
+            "title": "Trajectory",
+            "type": "string"
+          },
+          "mnemonic": {
+            "title": "Mnemonic",
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
+          },
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1
+          },
+          "description": {
+            "title": "Description",
+            "type": "string",
+            "maxLength": 1024,
+            "nullable": true
+          },
+          "scenario_json_file": {
+            "title": "Scenario json file",
+            "type": "string",
+            "readOnly": true,
+            "format": "uri",
+            "nullable": true
+          },
+          "start": {
+            "title": "Start",
+            "type": "string",
+            "maxLength": 64,
+            "nullable": true
+          },
+          "end": {
+            "title": "End",
+            "type": "string",
+            "maxLength": 64,
+            "nullable": true
+          }
+        }
+      },
+      "ResourceProfile": {
+        "required": [
+          "category",
+          "target",
+          "unit",
+          "instrument_type"
+        ],
+        "type": "object",
+        "properties": {
+          "category": {
+            "title": "Category",
+            "type": "string"
+          },
+          "target": {
+            "title": "Target",
+            "type": "string"
+          },
+          "value": {
+            "title": "Value",
+            "type": "number",
+            "nullable": true
+          },
+          "unit": {
+            "title": "Unit",
+            "type": "string"
+          },
+          "instrument_type": {
+            "title": "Instrument type",
+            "type": "string"
+          }
+        }
+      },
+      "InstrumentResourceProfile": {
+        "required": [
+          "category",
+          "target",
+          "unit",
+          "instrument"
+        ],
+        "type": "object",
+        "properties": {
+          "category": {
+            "title": "Category",
+            "type": "string"
+          },
+          "target": {
+            "title": "Target",
+            "type": "string"
+          },
+          "value": {
+            "title": "Value",
+            "type": "number",
+            "nullable": true
+          },
+          "unit": {
+            "title": "Unit",
+            "type": "string"
+          },
+          "instrument": {
+            "title": "Instrument",
+            "type": "string"
+          }
+        }
+      },
+      "Segment": {
+        "required": [
+          "start",
+          "end",
+          "segment_definition",
+          "overwritten",
+          "instrument_overwritten",
+          "timeline"
+        ],
+        "type": "object",
+        "properties": {
+          "start": {
+            "title": "Start",
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 1
+          },
+          "end": {
+            "title": "End",
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 1
+          },
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "maxLength": 128
+          },
+          "resources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResourceProfile"
+            },
+            "nullable": true
+          },
+          "instrument_resources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InstrumentResourceProfile"
+            },
+            "nullable": true
+          },
+          "segment_definition": {
+            "title": "Segment definition",
+            "type": "string"
+          },
+          "segment_group": {
+            "title": "Segment group",
+            "type": "string",
+            "nullable": true
+          },
+          "overwritten": {
+            "title": "Overwritten",
+            "type": "boolean"
+          },
+          "instrument_overwritten": {
+            "title": "Instrument overwritten",
+            "type": "boolean"
+          },
+          "timeline": {
+            "title": "Timeline",
+            "type": "string"
+          },
+          "platform_power_profile": {
+            "title": "Platform power profile",
+            "type": "string",
+            "nullable": true
+          },
+          "platform_power": {
+            "title": "Platform power",
+            "type": "number",
+            "nullable": true
+          },
+          "pointing_request_snippet": {
+            "title": "Pointing request snippet",
+            "type": "string",
+            "minLength": 1,
+            "nullable": true
+          },
+          "slew_policy": {
+            "title": "Slew policy",
+            "type": "string",
+            "nullable": true
+          },
+          "pointing_target": {
+            "title": "Pointing Target",
+            "type": "string",
+            "maxLength": 256,
+            "nullable": true
+          },
+          "scheduling_priority": {
+            "title": "Scheduling Priority",
+            "type": "integer",
+            "maximum": 2147483647,
+            "minimum": -2147483648,
+            "nullable": true
+          },
+          "origin": {
+            "title": "Origin",
+            "type": "string",
+            "maxLength": 128,
+            "nullable": true
+          }
+        }
+      },
+      "SegmentGroup": {
+        "required": [
+          "name",
+          "mnemonic"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1
+          },
+          "mnemonic": {
+            "title": "Mnemonic",
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
+          },
+          "resources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResourceProfile"
+            },
+            "nullable": true
+          },
+          "instrument_resources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InstrumentResourceProfile"
+            },
+            "nullable": true
+          },
+          "platform_power_profile": {
+            "title": "Platform power profile",
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "Plan": {
+        "required": [
+          "trajectory",
+          "mnemonic",
+          "name",
+          "is_public",
+          "segments",
+          "segment_groups"
+        ],
+        "type": "object",
+        "properties": {
+          "trajectory": {
+            "title": "Trajectory",
+            "type": "string"
+          },
+          "mnemonic": {
+            "title": "Mnemonic",
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
+          },
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1
+          },
+          "description": {
+            "title": "Description",
+            "type": "string",
+            "maxLength": 1024,
+            "nullable": true
+          },
+          "is_public": {
+            "title": "Is public",
+            "type": "boolean"
+          },
+          "segments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Segment"
+            }
+          },
+          "segment_groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SegmentGroup"
+            }
+          },
+          "default_block": {
+            "title": "Default block",
+            "type": "string",
+            "readOnly": true
+          },
+          "default_slew_policy": {
+            "title": "Default slew policy",
+            "type": "string",
+            "readOnly": true
+          },
+          "spice_info": {
+            "title": "Spice info",
+            "type": "string",
+            "readOnly": true
+          },
+          "refine_log": {
+            "title": "Refine log",
+            "type": "string"
+          }
+        }
+      },
+      "Event": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "start": {
+            "title": "Start",
+            "type": "string",
+            "maxLength": 64,
+            "nullable": true
+          },
+          "end": {
+            "title": "End",
+            "type": "string",
+            "maxLength": 64,
+            "nullable": true
+          },
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1
+          },
+          "description": {
+            "title": "Description",
+            "type": "string",
+            "maxLength": 1024,
+            "nullable": true
+          },
+          "definition": {
+            "title": "Definition",
+            "type": "string",
+            "readOnly": true
+          }
+        }
+      },
+      "Mode": {
+        "required": [
+          "name",
+          "mnemonic",
+          "payload"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1
+          },
+          "mnemonic": {
+            "title": "Mnemonic",
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
+          },
+          "description": {
+            "title": "Description",
+            "type": "string",
+            "maxLength": 1024,
+            "nullable": true
+          },
+          "mapps_mode": {
+            "title": "MAPPS Mode",
+            "type": "string",
+            "maxLength": 200,
+            "nullable": true
+          },
+          "payload": {
+            "title": "Payload",
+            "type": "string"
+          },
+          "power": {
+            "title": "Nominal Power (W)",
+            "type": "number",
+            "nullable": true
+          },
+          "data_rate": {
+            "title": "Data rate (bps)",
+            "type": "number",
+            "nullable": true
+          },
+          "inactive": {
+            "title": "Inactive",
+            "type": "boolean"
+          },
+          "comments": {
+            "title": "Comments",
+            "type": "string",
+            "maxLength": 100,
+            "nullable": true
+          }
+        }
+      },
+      "DataProfile": {
+        "required": [
+          "event",
+          "time",
+          "mode"
+        ],
+        "type": "object",
+        "properties": {
+          "event": {
+            "title": "Event",
+            "type": "string"
+          },
+          "time": {
+            "title": "Time",
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 1
+          },
+          "mode": {
+            "title": "Mode",
+            "type": "string"
+          },
+          "data_rate": {
+            "title": "Data rate",
+            "type": "string",
+            "readOnly": true
+          },
+          "comment": {
+            "title": "Comment",
+            "description": "Comment when exported to observation definition file",
+            "type": "string",
+            "nullable": true
+          },
+          "unit": {
+            "title": "Unit",
+            "type": "string",
+            "readOnly": true
+          }
+        }
+      },
+      "PowerProfile": {
+        "required": [
+          "event",
+          "time",
+          "mode"
+        ],
+        "type": "object",
+        "properties": {
+          "event": {
+            "title": "Event",
+            "type": "string"
+          },
+          "time": {
+            "title": "Time",
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 1
+          },
+          "mode": {
+            "title": "Mode",
+            "type": "string"
+          },
+          "power": {
+            "title": "Power",
+            "type": "string",
+            "readOnly": true
+          },
+          "comment": {
+            "title": "Comment",
+            "description": "Comment when exported to observation definition file",
+            "type": "string",
+            "nullable": true
+          },
+          "unit": {
+            "title": "Unit",
+            "type": "string",
+            "readOnly": true
+          }
+        }
+      },
+      "ObservationDefinition": {
+        "required": [
+          "name",
+          "mnemonic",
+          "payload",
+          "pointing_type",
+          "target",
+          "segment_definitions"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "ID",
+            "type": "integer",
+            "readOnly": true
+          },
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1
+          },
+          "mnemonic": {
+            "title": "Mnemonic",
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
+          },
+          "description": {
+            "title": "Description",
+            "type": "string",
+            "nullable": true
+          },
+          "payload": {
+            "title": "Payload",
+            "type": "string"
+          },
+          "pointing_type": {
+            "title": "Pointing type",
+            "type": "string"
+          },
+          "target": {
+            "title": "Target",
+            "type": "string"
+          },
+          "data_profile": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DataProfile"
+            },
+            "nullable": true
+          },
+          "power_profile": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PowerProfile"
+            },
+            "nullable": true
+          },
+          "PTRSnippet_file": {
+            "title": "PTRSnippet file",
+            "type": "string",
+            "readOnly": true,
+            "format": "uri",
+            "nullable": true
+          },
+          "ITLSnippet_file": {
+            "title": "ITLSnippet file",
+            "type": "string",
+            "readOnly": true,
+            "format": "uri",
+            "nullable": true
+          },
+          "PTRSnippet": {
+            "title": "Default PTR Snippet",
+            "type": "string",
+            "nullable": true
+          },
+          "ITLSnippet": {
+            "title": "Default ITL Snippet",
+            "type": "string",
+            "nullable": true
+          },
+          "segment_definitions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          }
+        }
+      },
+      "ObservationDefinitionExtend": {
+        "required": [
+          "name",
+          "mnemonic",
+          "payload",
+          "pointing_type",
+          "target",
+          "segment_definitions",
+          "SchedulingRules",
+          "AvoidanceRules"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "ID",
+            "type": "integer",
+            "readOnly": true
+          },
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1
+          },
+          "mnemonic": {
+            "title": "Mnemonic",
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
+          },
+          "description": {
+            "title": "Description",
+            "type": "string",
+            "nullable": true
+          },
+          "payload": {
+            "title": "Payload",
+            "type": "string"
+          },
+          "pointing_type": {
+            "title": "Pointing type",
+            "type": "string"
+          },
+          "target": {
+            "title": "Target",
+            "type": "string"
+          },
+          "data_profile": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DataProfile"
+            },
+            "nullable": true
+          },
+          "power_profile": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PowerProfile"
+            },
+            "nullable": true
+          },
+          "PTRSnippet_file": {
+            "title": "PTRSnippet file",
+            "type": "string",
+            "readOnly": true,
+            "format": "uri",
+            "nullable": true
+          },
+          "ITLSnippet_file": {
+            "title": "ITLSnippet file",
+            "type": "string",
+            "readOnly": true,
+            "format": "uri",
+            "nullable": true
+          },
+          "PTRSnippet": {
+            "title": "Default PTR Snippet",
+            "type": "string",
+            "nullable": true
+          },
+          "ITLSnippet": {
+            "title": "Default ITL Snippet",
+            "type": "string",
+            "nullable": true
+          },
+          "segment_definitions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "SchedulingRules": {
+            "title": "Scheduling Rules",
+            "description": "any rule that is used to schedule the observation: repetition rules, continuous (plasma instruments), one-off, every orbit, every day, etc",
+            "type": "string",
+            "minLength": 1
+          },
+          "AvoidanceRules": {
+            "title": "Avoidance Rules",
+            "description": "conditions that make the observation not possible (e.g. thruster firing)",
+            "type": "string",
+            "minLength": 1
+          },
+          "log": {
+            "title": "References",
+            "type": "string",
+            "nullable": true
+          },
+          "Comments": {
+            "title": "Comments",
+            "type": "string",
+            "nullable": true
+          },
+          "changeReason": {
+            "title": "ChangeReason",
+            "type": "string",
+            "nullable": true
+          },
+          "Support_Plot_1": {
+            "title": "Support Plot 1",
+            "type": "string",
+            "readOnly": true,
+            "format": "uri",
+            "nullable": true
+          },
+          "Support_Plot_2": {
+            "title": "Support Plot 2",
+            "type": "string",
+            "readOnly": true,
+            "format": "uri",
+            "nullable": true
+          },
+          "Support_Plot_3": {
+            "title": "Support Plot 3",
+            "type": "string",
+            "readOnly": true,
+            "format": "uri",
+            "nullable": true
+          }
+        }
+      },
+      "PlanList": {
+        "required": [
+          "trajectory",
+          "name",
+          "mnemonic",
+          "is_public"
+        ],
+        "type": "object",
+        "properties": {
+          "trajectory": {
+            "title": "Trajectory",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1
+          },
+          "created": {
+            "title": "Created",
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "mnemonic": {
+            "title": "Mnemonic",
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
+          },
+          "id": {
+            "title": "ID",
+            "type": "integer",
+            "readOnly": true
+          },
+          "author": {
+            "title": "Author",
+            "type": "string",
+            "readOnly": true
+          },
+          "description": {
+            "title": "Description",
+            "type": "string",
+            "maxLength": 1024,
+            "nullable": true
+          },
+          "is_public": {
+            "title": "Is public",
+            "type": "boolean"
+          },
+          "refine_log": {
+            "title": "Refine log",
+            "type": "string"
+          },
+          "ptr_file": {
+            "title": "Ptr file",
+            "type": "string",
+            "readOnly": true
+          }
+        }
+      },
+      "ReadOnlyResourceProfile": {
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "instrument_type": {
+            "title": "Instrument type",
+            "type": "string",
+            "readOnly": true
+          },
+          "category": {
+            "title": "Category",
+            "type": "string",
+            "readOnly": true
+          },
+          "target": {
+            "title": "Target",
+            "type": "string",
+            "readOnly": true
+          },
+          "unit": {
+            "title": "Unit",
+            "type": "string",
+            "readOnly": true
+          },
+          "value": {
+            "title": "Value",
+            "type": "number"
+          }
+        }
+      },
+      "ReadOnlyInstrumentResourceProfile": {
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "instrument": {
+            "title": "Instrument",
+            "type": "string",
+            "readOnly": true
+          },
+          "category": {
+            "title": "Category",
+            "type": "string",
+            "readOnly": true
+          },
+          "target": {
+            "title": "Target",
+            "type": "string",
+            "readOnly": true
+          },
+          "unit": {
+            "title": "Unit",
+            "type": "string",
+            "readOnly": true
+          },
+          "value": {
+            "title": "Value",
+            "type": "number"
+          }
+        }
+      },
+      "ReadOnlySegmentGroup": {
+        "required": [
+          "name",
+          "mnemonic",
+          "resources",
+          "instrument_resources"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1
+          },
+          "mnemonic": {
+            "title": "Mnemonic",
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
+          },
+          "resources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReadOnlyResourceProfile"
+            }
+          },
+          "instrument_resources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReadOnlyInstrumentResourceProfile"
+            }
+          },
+          "platform_power_profile": {
+            "title": "Platform power profile",
+            "type": "integer",
+            "readOnly": true
+          }
+        }
+      },
+      "ReadOnlyPlan": {
+        "required": [
+          "trajectory",
+          "mnemonic",
+          "name",
+          "is_public",
+          "segment_groups"
+        ],
+        "type": "object",
+        "properties": {
+          "trajectory": {
+            "title": "Trajectory",
+            "type": "string"
+          },
+          "mnemonic": {
+            "title": "Mnemonic",
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
+          },
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1
+          },
+          "description": {
+            "title": "Description",
+            "type": "string",
+            "maxLength": 1024,
+            "nullable": true
+          },
+          "is_public": {
+            "title": "Is public",
+            "type": "boolean"
+          },
+          "segments": {
+            "title": "Segments",
+            "type": "string",
+            "readOnly": true
+          },
+          "segment_groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReadOnlySegmentGroup"
+            }
+          },
+          "refine_log": {
+            "title": "Refine log",
+            "type": "string"
+          },
+          "spice_info": {
+            "title": "Spice info",
+            "type": "string",
+            "readOnly": true
+          },
+          "default_block": {
+            "title": "Default block",
+            "type": "string",
+            "readOnly": true
+          },
+          "default_slew_policy": {
+            "title": "Default slew policy",
+            "type": "string",
+            "readOnly": true
+          }
+        }
+      },
+      "PlanStats": {
+        "type": "object",
+        "properties": {
+          "segment_number": {
+            "title": "Segment number",
+            "type": "string",
+            "readOnly": true
+          },
+          "group_number": {
+            "title": "Group number",
+            "type": "string",
+            "readOnly": true
+          },
+          "start": {
+            "title": "Start",
+            "type": "string",
+            "readOnly": true
+          },
+          "end": {
+            "title": "End",
+            "type": "string",
+            "readOnly": true
+          },
+          "stats": {
+            "title": "Stats",
+            "type": "string",
+            "readOnly": true
+          }
+        }
+      },
+      "SpiceKernel": {
+        "required": [
+          "name",
+          "mnemonic",
+          "path"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1
+          },
+          "mnemonic": {
+            "title": "Mnemonic",
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1
+          },
+          "path": {
+            "title": "Path",
+            "type": "string",
+            "maxLength": 512,
+            "minLength": 1
+          }
+        }
+      },
+      "SimphonyPlan": {
+        "required": [
+          "trajectory",
+          "mnemonic",
+          "is_public",
+          "segment_timeline",
+          "segment_opportunities",
+          "kernels",
+          "skd_version",
+          "metakernel",
+          "default_block",
+          "default_slew_policy"
+        ],
+        "type": "object",
+        "properties": {
+          "trajectory": {
+            "title": "Trajectory",
+            "type": "string",
+            "minLength": 1
+          },
+          "mnemonic": {
+            "title": "Mnemonic",
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "title": "Description",
+            "type": "string",
+            "minLength": 1
+          },
+          "is_public": {
+            "title": "Is public",
+            "type": "boolean"
+          },
+          "segment_timeline": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Segment"
+            }
+          },
+          "segment_opportunities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Segment"
+            }
+          },
+          "kernels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SpiceKernel"
+            }
+          },
+          "skd_version": {
+            "title": "Skd version",
+            "type": "string",
+            "minLength": 1
+          },
+          "metakernel": {
+            "title": "Metakernel",
+            "type": "string",
+            "minLength": 1
+          },
+          "default_block": {
+            "title": "Default block",
+            "type": "string",
+            "minLength": 1
+          },
+          "default_slew_policy": {
+            "title": "Default slew policy",
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "SegmentDefinition": {
+        "required": [
+          "name",
+          "mnemonic",
+          "prime_segment",
+          "observation_definitions"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1
+          },
+          "mnemonic": {
+            "title": "Mnemonic",
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
+          },
+          "description": {
+            "title": "Description",
+            "type": "string",
+            "maxLength": 1024,
+            "nullable": true
+          },
+          "resources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResourceProfile"
+            },
+            "nullable": true
+          },
+          "instrument_resources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InstrumentResourceProfile"
+            },
+            "nullable": true
+          },
+          "group": {
+            "title": "Group",
+            "type": "string",
+            "readOnly": true
+          },
+          "prime_segment": {
+            "title": "Prime Segment",
+            "type": "boolean"
+          },
+          "pointing_request_file": {
+            "title": "Pointing request file",
+            "type": "string",
+            "readOnly": true,
+            "format": "uri",
+            "nullable": true
+          },
+          "slew_policy": {
+            "title": "Slew policy",
+            "type": "string",
+            "readOnly": true
+          },
+          "pointing_target": {
+            "title": "Pointing Target",
+            "type": "string",
+            "maxLength": 256,
+            "nullable": true
+          },
+          "platform_power_profile": {
+            "title": "Platform power profile",
+            "type": "string",
+            "readOnly": true
+          },
+          "scheduler_flag": {
+            "title": "Scheduler Flag",
+            "type": "boolean",
+            "nullable": true
+          },
+          "scheduling_priority": {
+            "title": "Scheduling Priority",
+            "type": "integer",
+            "maximum": 2147483647,
+            "minimum": -2147483648,
+            "nullable": true
+          },
+          "observation_definitions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          }
+        }
+      },
+      "SeriesData": {
+        "type": "object",
+        "properties": {
+          "epoch": {
+            "title": "Epoch",
+            "type": "string",
+            "maxLength": 64,
+            "nullable": true
+          },
+          "value": {
+            "title": "Value",
+            "type": "number",
+            "nullable": true
+          }
+        }
+      },
+      "TrajectoryList": {
+        "required": [
+          "name",
+          "mnemonic"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1
+          },
+          "mnemonic": {
+            "title": "Mnemonic",
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
+          },
+          "id": {
+            "title": "ID",
+            "type": "integer",
+            "readOnly": true
+          },
+          "trajectory_type": {
+            "title": "Trajectory type",
+            "type": "string",
+            "readOnly": true
+          }
+        }
+      },
+      "Phase": {
+        "required": [
+          "name",
+          "mnemonic"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1
+          },
+          "mnemonic": {
+            "title": "Mnemonic",
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
+          },
+          "start": {
+            "title": "Start date",
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "end": {
+            "title": "End date",
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "Trajectory": {
+        "required": [
+          "name",
+          "mnemonic",
+          "phases"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1
+          },
+          "mnemonic": {
+            "title": "Mnemonic",
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
+          },
+          "id": {
+            "title": "ID",
+            "type": "integer",
+            "readOnly": true
+          },
+          "trajectory_type": {
+            "title": "Trajectory type",
+            "type": "string",
+            "readOnly": true
+          },
+          "phases": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Phase"
+            }
+          },
+          "spice_info": {
+            "title": "Spice info",
+            "type": "string",
+            "readOnly": true
+          },
+          "ptr_file": {
+            "title": "Ptr file",
+            "type": "string",
+            "readOnly": true,
+            "format": "uri"
+          }
+        }
+      },
+      "EngineeringSegmentType": {
+        "required": [
+          "mnemonic",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "mnemonic": {
+            "title": "Mnemonic",
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
+          },
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1
+          },
+          "description": {
+            "title": "Description",
+            "type": "string",
+            "maxLength": 1024,
+            "nullable": true
+          },
+          "power": {
+            "title": "Power",
+            "type": "number",
+            "nullable": true
+          }
+        }
+      },
+      "EngineeringSegment": {
+        "required": [
+          "start",
+          "end"
+        ],
+        "type": "object",
+        "properties": {
+          "start": {
+            "title": "Start",
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 1
+          },
+          "end": {
+            "title": "End",
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 1
+          },
+          "segment_type": {
+            "title": "Segment type",
+            "type": "string",
+            "readOnly": true
+          },
+          "power": {
+            "title": "Power",
+            "type": "number",
+            "readOnly": true
+          },
+          "segment_type_raw": {
+            "title": "Segment type raw",
+            "type": "string",
+            "readOnly": true
+          }
+        }
+      },
+      "SeriesDefinition": {
+        "required": [
+          "name",
+          "mnemonic"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1
+          },
+          "mnemonic": {
+            "title": "Mnemonic",
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
+          },
+          "unit": {
+            "title": "Unit",
+            "type": "string",
+            "maxLength": 64,
+            "nullable": true
+          },
+          "category": {
+            "title": "Category",
+            "type": "string",
+            "readOnly": true
+          },
+          "description": {
+            "title": "Description",
+            "type": "string",
+            "maxLength": 1024,
+            "nullable": true
+          }
+        }
+      },
+      "WorkingGroupMembership": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "working_group": {
+            "title": "Working group",
+            "type": "string",
+            "readOnly": true
+          },
+          "type": {
+            "title": "Type",
+            "type": "string",
+            "enum": [
+              "LEADER",
+              "MEMBER"
+            ]
+          }
+        }
+      },
+      "InstrumentMembership": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "instrument": {
+            "title": "Instrument",
+            "type": "string",
+            "readOnly": true
+          },
+          "type": {
+            "title": "Type",
+            "type": "string",
+            "enum": [
+              "PI",
+              "MEMBER"
+            ]
+          }
+        }
+      },
+      "User": {
+        "required": [
+          "working_groups",
+          "instruments"
+        ],
+        "type": "object",
+        "properties": {
+          "username": {
+            "title": "Username",
+            "type": "string",
+            "pattern": "^[\\w.@+-]+$",
+            "readOnly": true
+          },
+          "email": {
+            "title": "Email",
+            "type": "string",
+            "readOnly": true
+          },
+          "first_name": {
+            "title": "First name",
+            "type": "string",
+            "readOnly": true
+          },
+          "last_name": {
+            "title": "Last name",
+            "type": "string",
+            "readOnly": true
+          },
+          "role": {
+            "title": "Role",
+            "type": "string",
+            "readOnly": true
+          },
+          "working_groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkingGroupMembership"
+            }
+          },
+          "instruments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InstrumentMembership"
+            }
+          }
+        }
+      },
+      "ApiVersion": {
+        "required": [
+          "version"
+        ],
+        "type": "object",
+        "properties": {
+          "version": {
+            "title": "Version",
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}
