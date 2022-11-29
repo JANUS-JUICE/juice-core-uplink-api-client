@@ -38,7 +38,7 @@ to work.
 First, create a client:
 
 ```python
-from juice_core.SHTRestInterface import SHTRestInterface
+from juice_core import SHTRestInterface
 i = SHTRestInterface()
 ```
 and access the list of available plans on the server:
@@ -55,3 +55,13 @@ will output a pandas dataframe with the list of plans (just some here):
 |  1 | CREMA_5_0    | CREMA_5_0_OPPORTUNITIES_v0 | CREMA_5_0_OPPORTUNITIES_v0 | True        | 2021-08-26 09:12:06.767139 |   31 | cvallat  | 1st run opf opportunities generation (UC22), based on existing definitions of oppportunities (inherited from crema 3_0)                                               |              | https://juicesoc.esac.esa.int/rest_api/file/trajectory%23CREMA_5_0.ptx/ |
 |  2 | CREMA_5_0    | CREMA_5_0_OPPORTUNITIES_v1 | CREMA_5_0_OPPORTUNITIES_v1 | True        | 2021-10-04 13:49:49.262682 |   36 | cvallat  | Added two opportunities for JMAG_CALROL for the last 2 perijoves before JOI (PJ69 not considered since too clsoe to GoI for observations to take place --> MPAD rule) |              | https://juicesoc.esac.esa.int/rest_api/file/trajectory%23CREMA_5_0.ptx/ |
 |  3 | CREMA_5_0    | CREMA_5_0_OPPORTUNITIES_v2 | CREMA_5_0_OPPORTUNITIES_v2 | True        | 2021-10-05 07:24:07.742653 |   37 | cvallat  | Modified GANYMEDE_GM opportunity around 3G3 for WG3 prime allocation (1 hour centered at CA)                                                                          |              | https://juicesoc.esac.esa.int/rest_api/file/trajectory%23CREMA_5_0.ptx/ |
+
+
+You can also directly interact with the underalying `juice-core-uplink-api-client` module:
+
+```python
+from juice_core_uplink_api_client.api.rest_api import rest_api_plan_list
+from juice_core_uplink_api_client import Client
+c = Client("https://juicesoc.esac.esa.int")
+rest_api_plan_list.sync(client=c)
+```
