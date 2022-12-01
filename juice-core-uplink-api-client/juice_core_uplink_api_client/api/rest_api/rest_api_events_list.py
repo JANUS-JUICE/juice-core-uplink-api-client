@@ -5,17 +5,23 @@ import httpx
 
 from ...client import Client
 from ...models.event import Event
-from ...types import Response
+from ...types import UNSET, Response
 
 
 def _get_kwargs(
     *,
     client: Client,
+    body: str,
 ) -> Dict[str, Any]:
     url = "{}/rest_api/events/".format(client.base_url)
 
     headers: Dict[str, str] = client.get_headers()
     cookies: Dict[str, Any] = client.get_cookies()
+
+    params: Dict[str, Any] = {}
+    params["body"] = body
+
+    params = {k: v for k, v in params.items() if v is not UNSET and v is not None}
 
     return {
         "method": "get",
@@ -23,6 +29,7 @@ def _get_kwargs(
         "headers": headers,
         "cookies": cookies,
         "timeout": client.get_timeout(),
+        "params": params,
     }
 
 
@@ -54,6 +61,7 @@ def _build_response(*, response: httpx.Response) -> Response[Union[Any, List["Ev
 def sync_detailed(
     *,
     client: Client,
+    body: str,
 ) -> Response[Union[Any, List["Event"]]]:
     """Retrieve the geometry events of a trajectory
 
@@ -64,12 +72,16 @@ def sync_detailed(
     * trajectory: the name of the trajectory
     * mnemonics: a list of the names of the events mnemonics
 
+    Args:
+        body (str):
+
     Returns:
         Response[Union[Any, List['Event']]]
     """
 
     kwargs = _get_kwargs(
         client=client,
+        body=body,
     )
 
     response = httpx.request(
@@ -83,6 +95,7 @@ def sync_detailed(
 def sync(
     *,
     client: Client,
+    body: str,
 ) -> Optional[Union[Any, List["Event"]]]:
     """Retrieve the geometry events of a trajectory
 
@@ -93,18 +106,23 @@ def sync(
     * trajectory: the name of the trajectory
     * mnemonics: a list of the names of the events mnemonics
 
+    Args:
+        body (str):
+
     Returns:
         Response[Union[Any, List['Event']]]
     """
 
     return sync_detailed(
         client=client,
+        body=body,
     ).parsed
 
 
 async def asyncio_detailed(
     *,
     client: Client,
+    body: str,
 ) -> Response[Union[Any, List["Event"]]]:
     """Retrieve the geometry events of a trajectory
 
@@ -115,12 +133,16 @@ async def asyncio_detailed(
     * trajectory: the name of the trajectory
     * mnemonics: a list of the names of the events mnemonics
 
+    Args:
+        body (str):
+
     Returns:
         Response[Union[Any, List['Event']]]
     """
 
     kwargs = _get_kwargs(
         client=client,
+        body=body,
     )
 
     async with httpx.AsyncClient(verify=client.verify_ssl) as _client:
@@ -132,6 +154,7 @@ async def asyncio_detailed(
 async def asyncio(
     *,
     client: Client,
+    body: str,
 ) -> Optional[Union[Any, List["Event"]]]:
     """Retrieve the geometry events of a trajectory
 
@@ -142,6 +165,9 @@ async def asyncio(
     * trajectory: the name of the trajectory
     * mnemonics: a list of the names of the events mnemonics
 
+    Args:
+        body (str):
+
     Returns:
         Response[Union[Any, List['Event']]]
     """
@@ -149,5 +175,6 @@ async def asyncio(
     return (
         await asyncio_detailed(
             client=client,
+            body=body,
         )
     ).parsed

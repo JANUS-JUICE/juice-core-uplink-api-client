@@ -1,7 +1,7 @@
 # small change
 [tool.poetry]
 name = "juice-core-uplink-api-client"
-version = "v0.0.1"
+version = "0.1.1"
 description = "A client library for accessing Juice Core Uplink API"
 
 authors = []
@@ -19,6 +19,7 @@ httpx = ">=0.15.4,<0.24.0"
 attrs = ">=21.3.0"
 python-dateutil = "^2.8.0"
 pandas = "^1.5.2"
+merge-args = "^0.1.5"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

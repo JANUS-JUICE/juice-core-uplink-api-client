@@ -297,7 +297,14 @@
           "rest_api"
         ]
       },
-      "parameters": []
+       "parameters": [{
+          "name": "body",
+          "in": "query",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }]
     },
     "/rest_api/file/{filename}/": {
       "get": {

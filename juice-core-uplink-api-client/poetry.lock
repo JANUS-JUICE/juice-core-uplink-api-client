@@ -92,6 +92,14 @@ optional = false
 python-versions = ">=3.5"
 
 [[package]]
+name = "merge-args"
+version = "0.1.5"
+description = "Merge signatures of two functions with Advanced Hackery."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "numpy"
 version = "1.23.5"
 description = "NumPy is the fundamental package for array computing with Python."
@@ -171,7 +179,7 @@ python-versions = ">=3.7"
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<4.0" 
-content-hash = "56eafa2854fa2152bb5cf2ed3605ec07730ffa861327d894649ddbb250de2260"
+content-hash = "827c8eb9c998c885b20c118d6c9d2db1e3034e9217592d7aa5ee2e9de68f05c8"
 
 [metadata.files]
 anyio = [
@@ -201,6 +209,10 @@ httpx = [
 idna = [
     {file = "idna-3.4-py3-none-any.whl", hash = "sha256:90b77e79eaa3eba6de819a0c442c0b4ceefc341a7a2ab77d7562bf49f425c5c2"},
     {file = "idna-3.4.tar.gz", hash = "sha256:814f528e8dead7d329833b91c5faa87d60bf71824cd12a7530b5526063d02cb4"},
+]
+merge-args = [
+    {file = "merge_args-0.1.5-py2.py3-none-any.whl", hash = "sha256:f296a2dd9156dd055e3f540f0fb5784b94933457a4e0e8d0031a763c26bf24a8"},
+    {file = "merge_args-0.1.5.tar.gz", hash = "sha256:ad37e6c4c7f1eadda5a0564b26ca7d56f8a37f232f5c5c46f9ef93d352757c23"},
 ]
 numpy = [
     {file = "numpy-1.23.5-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:9c88793f78fca17da0145455f0d7826bcb9f37da4764af27ac945488116efe63"},

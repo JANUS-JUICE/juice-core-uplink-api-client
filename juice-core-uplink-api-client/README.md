@@ -3,6 +3,8 @@ A client library for accessing Juice Core Uplink API
 
 docs at https://juicesoc.esac.esa.int/docs/
 
+browsable at https://juicesoc.esac.esa.int/readonly_admin/core/
+
 ## Usage
 First, create a client:
 
