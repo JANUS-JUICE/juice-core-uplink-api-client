@@ -47,7 +47,7 @@ def pandas_convertable(func=None, timefields=None):
 
         result = func(*args, **kwargs)
         if as_pandas:
-            return convert_times(pd.DataFrame([d.to_dict() for d in result]),
+            return convert_times(pd.DataFrame([d.to_dict() if hasattr(d, "to_dict") else d for d in result]),
                           columns=timefields)
         else:
             return result
@@ -79,7 +79,7 @@ class SHTRestInterface:
 
     def plan_id_by_name(self, name):
         """Retrieve the plan id from the plane name"""
-        for plan in self.plans():
+        for plan in self.plans(as_pandas=False):
             if plan.name.lower().strip() == name.lower().strip():
                 log.debug(f"Plan {name} has id {plan.id}")
                 return plan.id
