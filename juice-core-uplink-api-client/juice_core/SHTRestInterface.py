@@ -1,9 +1,11 @@
 import json
 import logging
+from functools import cache, partial
 from typing import List, Union
-from functools import cache
+
 import pandas as pd
-from attr import define
+from attrs import define
+from merge_args import merge_args  # also makefun has a decorator that does this
 
 log = logging.getLogger(__name__)
 
@@ -19,6 +21,11 @@ from juice_core_uplink_api_client.api.rest_api import (
 from juice_core_uplink_api_client.client import Client
 
 
+DEFAULT_START = "2020"
+DEFAULT_END = "2040"
+DEFAULT_TRAJECTORY = "CREMA_5_0"
+DEFAULT_URL = "https://juicesoc.esac.esa.int"
+
 def convert_times(table, columns=None):
     if isinstance(columns, str):
         columns = [columns]
@@ -30,34 +37,24 @@ def convert_times(table, columns=None):
     return table
 
 
-DEFAULT_START = "2020"
-DEFAULT_END = "2040"
-
-from functools import partial
-from merge_args import merge_args
-
-
 def pandas_convertable(func=None, timefields=None):
     if func is None:
         return partial(pandas_convertable, timefields=timefields)
 
     @merge_args(func)
-    def wrapper(*args, as_pandas=True, **kwargs ):
-
-
+    def wrapper(*args, as_pandas=True, **kwargs):
         result = func(*args, **kwargs)
         if as_pandas:
-            return convert_times(pd.DataFrame([d.to_dict() if hasattr(d, "to_dict") else d for d in result]),
-                          columns=timefields)
+            return convert_times(
+                pd.DataFrame([d.to_dict() if hasattr(d, "to_dict") else d for d in result]), columns=timefields
+            )
         else:
             return result
-
 
     return wrapper
 
 
-
-@define(auto_attribs=True, eq=False )
+@define(auto_attribs=True, eq=False)
 class SHTRestInterface:
     """
     Main entry point for interacting with the Juice Core Uplink API
@@ -68,7 +65,7 @@ class SHTRestInterface:
 
     def __attrs_post_init__(self):
         if not self.client:
-            self.client = Client("https://juicesoc.esac.esa.int")
+            self.client = Client(DEFAULT_URL)
         self.client.timeout = self.timeout
 
     @cache
@@ -96,7 +93,7 @@ class SHTRestInterface:
 
     @cache
     @pandas_convertable(timefields=["start", "end"])
-    def engineering_segments(self, trajectory="CREMA_5_0") -> pd.DataFrame:
+    def engineering_segments(self, trajectory=DEFAULT_TRAJECTORY) -> pd.DataFrame:
         """Retrieve the engineering segments for a mnemonic"""
         return rest_api_trajectory_engineering_segments_list.sync(mnemonic=trajectory, client=self.client)
 
@@ -110,13 +107,13 @@ class SHTRestInterface:
 
     @cache
     @pandas_convertable
-    def known_series(self, trajectory="CREMA_5_0"):
+    def known_series(self, trajectory=DEFAULT_TRAJECTORY):
         """Retrieve all the series available on the endpoint"""
         return rest_api_trajectory_series_list.sync(client=self.client, mnemonic=trajectory)
 
     @cache
     @pandas_convertable(timefields=["epoch"])
-    def series(self, series_name, trajectory="CREMA_5_0", start=DEFAULT_START, end=DEFAULT_END):
+    def series(self, series_name, trajectory=DEFAULT_TRAJECTORY, start=DEFAULT_START, end=DEFAULT_END):
         """Retrieve a serie from the endpoint"""
 
         q = dict(start=str(start), end=str(end), trajectory=trajectory, series=series_name)
@@ -125,8 +122,8 @@ class SHTRestInterface:
         return rest_api_series_list.sync(client=self.client, body=body)
 
     @cache
-    @pandas_convertable(timefields=None)
-    def event_types(self, trajectory="CREMA_5_0"):
+    @pandas_convertable
+    def event_types(self, trajectory=DEFAULT_TRAJECTORY):
         """Retrieve all the events applicable for a trajectory"""
         return rest_api_trajectory_event_list.sync(client=self.client, mnemonic=trajectory)
 
@@ -135,14 +132,11 @@ class SHTRestInterface:
     def events(
         self,
         mnemonics: Union[List[str], str] = [],
-        trajectory:str="CREMA_5_0",
+        trajectory: str = DEFAULT_TRAJECTORY,
         start=DEFAULT_START,
         end=DEFAULT_END,
     ):
         """Retrieve events of a given type from the endpoint"""
-        
-        from time import sleep
-        sleep(5)
         if isinstance(mnemonics, str):
             mnemonics = [mnemonics]
 
@@ -155,5 +149,3 @@ class SHTRestInterface:
 
         body = json.dumps(q)
         return rest_api_events_list.sync(client=self.client, body=body)
-
-
