@@ -7,8 +7,6 @@ import pandas as pd
 from attrs import define
 from merge_args import merge_args  # also makefun has a decorator that does this
 
-log = logging.getLogger(__name__)
-
 from juice_core_uplink_api_client.api.rest_api import (
     rest_api_events_list,
     rest_api_plan_list,
@@ -20,34 +18,63 @@ from juice_core_uplink_api_client.api.rest_api import (
 )
 from juice_core_uplink_api_client.client import Client
 
+log = logging.getLogger(__name__)
+
 
 DEFAULT_START = "2020"
 DEFAULT_END = "2040"
 DEFAULT_TRAJECTORY = "CREMA_5_0"
 DEFAULT_URL = "https://juicesoc.esac.esa.int"
 
-def convert_times(table, columns=None):
+
+def convert_times(table, columns=[]):
     if isinstance(columns, str):
         columns = [columns]
 
-    if columns is not None:
-        for c in columns:
-            table[c] = pd.to_datetime(table[c]).dt.tz_localize(None)
+    if len(columns) == 0 or columns is None:
+        return table
+
+    for col in columns:
+        table[col] = pd.to_datetime(table[col]).dt.tz_localize(None)
 
     return table
 
 
-def pandas_convertable(func=None, timefields=None):
+def table_to_timeseries(table, name=None):
+    return pd.Series(data=table.value.values, index=table.epoch.values, name=name)
+
+
+def pandas_convertable(func=None, time_fields=[], is_timeseries=False):
     if func is None:
-        return partial(pandas_convertable, timefields=timefields)
+        return partial(pandas_convertable, time_fields=time_fields, is_timeseries=is_timeseries)
+
+    from copy import copy, deepcopy
 
     @merge_args(func)
     def wrapper(*args, as_pandas=True, **kwargs):
-        result = func(*args, **kwargs)
+        time_fields_ = copy(time_fields)
+
+        series_name = None
+        if is_timeseries and ("epoch" not in time_fields_):
+            time_fields_ += ["epoch"]
+            if "series_name" in kwargs:
+                series_name = kwargs["series_name"]
+            else:
+                series_name = args[1]
+
+        result = func(*args, **kwargs)  # call actual function
+
+        # convert to pandas if needed
         if as_pandas:
-            return convert_times(
-                pd.DataFrame([d.to_dict() if hasattr(d, "to_dict") else d for d in result]), columns=timefields
+            table = convert_times(
+                pd.DataFrame([d.to_dict() if hasattr(d, "to_dict") else d for d in result]), columns=time_fields_
             )
+
+            if is_timeseries:
+                return table_to_timeseries(table, name=series_name)
+            else:
+                return table
+
         else:
             return result
 
@@ -69,7 +96,7 @@ class SHTRestInterface:
         self.client.timeout = self.timeout
 
     @cache
-    @pandas_convertable(timefields=["created"])
+    @pandas_convertable(time_fields=["created"])
     def plans(self):
         """Retrieve all the plans available on the endpoint"""
         return rest_api_plan_list.sync(client=self.client)
@@ -85,14 +112,14 @@ class SHTRestInterface:
         return None
 
     @cache
-    @pandas_convertable(timefields=["start", "end"])
+    @pandas_convertable(time_fields=["start", "end"])
     def plan_segments(self, plan_id_or_name):
         """Retrieve the segments of a plan"""
         plan = self.plan(plan_id_or_name, as_pandas=False)
         return plan.segments
 
     @cache
-    @pandas_convertable(timefields=["start", "end"])
+    @pandas_convertable(time_fields=["start", "end"])
     def engineering_segments(self, trajectory=DEFAULT_TRAJECTORY) -> pd.DataFrame:
         """Retrieve the engineering segments for a mnemonic"""
         return rest_api_trajectory_engineering_segments_list.sync(mnemonic=trajectory, client=self.client)
@@ -112,7 +139,7 @@ class SHTRestInterface:
         return rest_api_trajectory_series_list.sync(client=self.client, mnemonic=trajectory)
 
     @cache
-    @pandas_convertable(timefields=["epoch"])
+    @pandas_convertable(is_timeseries=True)
     def series(self, series_name, trajectory=DEFAULT_TRAJECTORY, start=DEFAULT_START, end=DEFAULT_END):
         """Retrieve a serie from the endpoint"""
 
@@ -128,7 +155,7 @@ class SHTRestInterface:
         return rest_api_trajectory_event_list.sync(client=self.client, mnemonic=trajectory)
 
     @cache
-    @pandas_convertable(timefields=["start", "end"])
+    @pandas_convertable(time_fields=["start", "end"])
     def events(
         self,
         mnemonics: Union[List[str], str] = [],

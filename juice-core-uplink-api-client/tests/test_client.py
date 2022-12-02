@@ -1,5 +1,7 @@
 from juice_core import SHTRestInterface
+
 client = SHTRestInterface()
+
 
 def test_plans():
     plans = client.plans()
@@ -35,5 +37,6 @@ def test_serie():
 def test_events():
     events = client.event_types()
     name = events.loc[0]["mnemonic"]
+    print(f"trying to retrieve events for {name}")
     events = client.events(name)
     assert len(events) > 0
