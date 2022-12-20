@@ -3,6 +3,20 @@
 It is made by two modules to interact with the Juice Core Uplink 
 API.
 
+## Install
+
+The module is now contributed to PyPI, just call
+
+```bash
+pip install juice_core_uplink_api_client
+```
+
+to install the module. If you use poetry to build your package and you want to add it as a dependency use:
+
+```bash
+poetry add install juice_core_uplink_api_client
+```
+
 ## juice-core-uplink-api-client
 This module is automatically generated using the command below. It must not be 
 modified manually.

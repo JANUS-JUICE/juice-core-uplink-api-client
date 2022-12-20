@@ -1,3 +1,4 @@
+import asyncio
 import json
 import logging
 from functools import cache, partial
@@ -81,6 +82,20 @@ def pandas_convertable(func=None, time_fields=[], is_timeseries=False):
     return wrapper
 
 
+def synchronize_async_helper(to_await):
+    async_response = []
+
+    async def run_and_capture_result():
+        r = await to_await
+        async_response.append(r)
+
+    loop = asyncio.get_event_loop()
+    coroutine = run_and_capture_result()
+    loop.run_until_complete(coroutine)
+    return async_response[0]
+
+
+
 @define(auto_attribs=True, eq=False)
 class SHTRestInterface:
     """
@@ -147,6 +162,29 @@ class SHTRestInterface:
 
         body = json.dumps(q)
         return rest_api_series_list.sync(client=self.client, body=body)
+
+    def series_multi_(self, series_names, trajectory=DEFAULT_TRAJECTORY,
+                           start=DEFAULT_START, end=DEFAULT_END):
+
+
+        loop = asyncio.get_event_loop()
+        coroutine = self.series_multi(series_names, trajectory=trajectory, start=start, end=end)
+        return loop.run_until_complete(coroutine)
+
+
+    def series_multi(self, series_names, trajectory=DEFAULT_TRAJECTORY, start=DEFAULT_START, end=DEFAULT_END):
+        """Retrieve multiple series from the endpoint"""
+        out = []
+        for series_name in series_names:
+            q = dict(start=str(start), end=str(end), trajectory=trajectory, series=series_name)
+
+            body = json.dumps(q)
+            got = rest_api_series_list.asyncio(client=self.client, body=body)
+            out.append(got)
+
+        return  asyncio.gather(*out)
+
+
 
     @cache
     @pandas_convertable
