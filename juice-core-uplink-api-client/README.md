@@ -14,7 +14,7 @@ pip install juice_core_uplink_api_client
 to install the module. If you use poetry to build your package and you want to add it as a dependency use:
 
 ```bash
-poetry add install juice_core_uplink_api_client
+poetry add juice_core_uplink_api_client
 ```
 
 ## juice-core-uplink-api-client
