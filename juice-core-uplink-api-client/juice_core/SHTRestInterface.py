@@ -24,7 +24,7 @@ log = logging.getLogger(__name__)
 
 DEFAULT_START = "2020"
 DEFAULT_END = "2040"
-DEFAULT_TRAJECTORY = "CREMA_5_0"
+DEFAULT_TRAJECTORY = "CREMA_5_1_150lb_23_1"
 DEFAULT_URL = "https://juicesoc.esac.esa.int"
 
 
