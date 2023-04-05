@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.0",
+  "openapi": "3.0.1",
   "info": {
     "title": "Juice Core Uplink API",
     "description": "An API to JUICE CORE uplink subsystem.",
@@ -12,6 +12,11 @@
     },
     "version": "v1"
   },
+  "servers": [
+    {
+      "url": "https://juicesoc.esac.esa.int/"
+    }
+  ],
   "security": [
     {
       "JWT": []
@@ -20,9 +25,12 @@
   "paths": {
     "/api-token-auth/": {
       "post": {
-        "operationId": "api-token-auth_create",
+        "tags": [
+          "api-token-auth"
+        ],
         "summary": "API View that receives a POST with a user's username and password.",
         "description": "Returns a JSON Web Token that can be used for authenticated requests.",
+        "operationId": "api-token-auth_create",
         "requestBody": {
           "content": {
             "application/json": {
@@ -45,17 +53,17 @@
             }
           }
         },
-        "tags": [
-          "api-token-auth"
-        ]
-      },
-      "parameters": []
+        "x-codegen-request-body-name": "data"
+      }
     },
     "/api-token-refresh/": {
       "post": {
-        "operationId": "api-token-refresh_create",
+        "tags": [
+          "api-token-refresh"
+        ],
         "summary": "API View that returns a refreshed token (with new expiration) based on\nexisting token",
         "description": "If 'orig_iat' field (original issued-at-time) is found, will first check\nif it's within expiration window, then copy it to the new token",
+        "operationId": "api-token-refresh_create",
         "requestBody": {
           "content": {
             "application/json": {
@@ -78,44 +86,42 @@
             }
           }
         },
-        "tags": [
-          "api-token-refresh"
-        ]
-      },
-      "parameters": []
+        "x-codegen-request-body-name": "data"
+      }
     },
     "/rest_api/checks/": {
       "get": {
-        "operationId": "rest_api_checks_list",
-        "summary": "Retrieve the consistency checks to be performed",
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "Consistency checks list"
-          }
-        },
         "tags": [
           "rest_api"
-        ]
-      },
-      "parameters": []
+        ],
+        "summary": "Retrieve the consistency checks to be performed",
+        "operationId": "rest_api_checks_list",
+        "responses": {
+          "200": {
+            "description": "Consistency checks list",
+            "content": {}
+          }
+        }
+      }
     },
     "/rest_api/checks/{working_group_mnemonic}/": {
       "get": {
-        "operationId": "rest_api_checks_read",
-        "summary": "Checks the segment definition completeness of working group",
-        "description": "Checks the segment definition completeness of working group",
-        "responses": {
-          "200": {
-            "description": "List of segment definitions not valid"
-          },
-          "404": {
-            "description": "Error checking the completeness"
-          }
-        },
         "tags": [
           "rest_api"
-        ]
+        ],
+        "summary": "Checks the segment definition completeness of working group",
+        "description": "Checks the segment definition completeness of working group",
+        "operationId": "rest_api_checks_read",
+        "responses": {
+          "200": {
+            "description": "List of segment definitions not valid",
+            "content": {}
+          },
+          "404": {
+            "description": "Error checking the completeness",
+            "content": {}
+          }
+        }
       },
       "parameters": [
         {
@@ -130,9 +136,11 @@
     },
     "/rest_api/config/": {
       "get": {
-        "operationId": "rest_api_config_list",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Retrieve the auxiliary configuration data",
-        "description": "",
+        "operationId": "rest_api_config_list",
         "responses": {
           "200": {
             "description": "",
@@ -144,18 +152,17 @@
               }
             }
           }
-        },
-        "tags": [
-          "rest_api"
-        ]
-      },
-      "parameters": []
+        }
+      }
     },
     "/rest_api/detailed_scenario/": {
       "get": {
-        "operationId": "rest_api_detailed_scenario_list",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Retrieve the list of detailed scenarios",
         "description": "List the PUBLIC plans available in the system",
+        "operationId": "rest_api_detailed_scenario_list",
         "responses": {
           "200": {
             "description": "",
@@ -167,15 +174,15 @@
               }
             }
           }
-        },
-        "tags": [
-          "rest_api"
-        ]
+        }
       },
       "post": {
-        "operationId": "rest_api_detailed_scenario_create",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Adds a new detailed scenario",
         "description": "Adds a new plan to the trajectory",
+        "operationId": "rest_api_detailed_scenario_create",
         "requestBody": {
           "content": {
             "application/json": {
@@ -198,20 +205,21 @@
             }
           },
           "401": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "content": {}
           }
         },
-        "tags": [
-          "rest_api"
-        ]
-      },
-      "parameters": []
+        "x-codegen-request-body-name": "data"
+      }
     },
     "/rest_api/detailed_scenario/{id}/": {
       "get": {
-        "operationId": "rest_api_detailed_scenario_read",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Retrieve a detailed scenario",
         "description": "Retrieve, update or delete a segmentation instance.",
+        "operationId": "rest_api_detailed_scenario_read",
         "responses": {
           "200": {
             "description": "",
@@ -224,15 +232,14 @@
             }
           },
           "401": {
-            "description": "Not authorized"
+            "description": "Not authorized",
+            "content": {}
           },
           "404": {
-            "description": "Detailed scenario not found"
+            "description": "Detailed scenario not found",
+            "content": {}
           }
-        },
-        "tags": [
-          "rest_api"
-        ]
+        }
       },
       "parameters": [
         {
@@ -247,31 +254,43 @@
     },
     "/rest_api/eps_package/": {
       "post": {
-        "operationId": "rest_api_eps_package_create",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Generates a EPS package for a plan",
         "description": "Adds a new plan to the trajectory",
+        "operationId": "rest_api_eps_package_create",
         "requestBody": {
-          "$ref": "#/components/requestBodies/Plan"
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Plan"
+              }
+            }
+          },
+          "required": true
         },
         "responses": {
           "200": {
-            "description": "Zip file with the eps package"
+            "description": "Zip file with the eps package",
+            "content": {}
           },
           "401": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "content": {}
           }
         },
-        "tags": [
-          "rest_api"
-        ]
-      },
-      "parameters": []
+        "x-codegen-request-body-name": "data"
+      }
     },
     "/rest_api/events/": {
       "get": {
-        "operationId": "rest_api_events_list",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Retrieve the geometry events of a trajectory",
         "description": "Restricts the returned queries by filtering against a **body** query parameter in the URL.\nThe **body** expected value is the JSON string corresponding to the following structure:\n* start: the date formatted as ISO8601 in UTC scale (2030-07-05T01:44:47Z)\n* end: the date formatted as ISO8601 in UTC scale (2030-07-05T01:44:47Z)\n* trajectory: the name of the trajectory\n* mnemonics: a list of the names of the events mnemonics",
+        "operationId": "rest_api_events_list",
         "responses": {
           "200": {
             "description": "",
@@ -287,31 +306,30 @@
             }
           },
           "400": {
-            "description": "body parameter not parseable or not present"
+            "description": "body parameter not parseable or not present",
+            "content": {}
           }
-        },
-        "tags": [
-          "rest_api"
-        ]
-      },
-      "parameters": []
+        }
+      }
     },
     "/rest_api/file/{filename}/": {
       "get": {
-        "operationId": "rest_api_file_read",
-        "summary": "Retrieve a file from SHT storage",
-        "description": "Get a file saved in the SHT storage",
-        "responses": {
-          "200": {
-            "description": "TextFile"
-          },
-          "400": {
-            "description": "The file requested is not available"
-          }
-        },
         "tags": [
           "rest_api"
-        ]
+        ],
+        "summary": "Retrieve a file from SHT storage",
+        "description": "Get a file saved in the SHT storage",
+        "operationId": "rest_api_file_read",
+        "responses": {
+          "200": {
+            "description": "TextFile",
+            "content": {}
+          },
+          "400": {
+            "description": "The file requested is not available",
+            "content": {}
+          }
+        }
       },
       "parameters": [
         {
@@ -326,9 +344,12 @@
     },
     "/rest_api/mode/": {
       "get": {
-        "operationId": "rest_api_mode_list",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Retrieve the list of modes",
         "description": "Get the list of modes",
+        "operationId": "rest_api_mode_list",
         "responses": {
           "200": {
             "description": "",
@@ -340,18 +361,17 @@
               }
             }
           }
-        },
-        "tags": [
-          "rest_api"
-        ]
-      },
-      "parameters": []
+        }
+      }
     },
     "/rest_api/observation_definition/": {
       "get": {
-        "operationId": "rest_api_observation_definition_list",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Retrieve the observation definition identified by the mnemonic",
         "description": "Get the list of observation definitions available in the system",
+        "operationId": "rest_api_observation_definition_list",
         "responses": {
           "200": {
             "description": "",
@@ -363,18 +383,17 @@
               }
             }
           }
-        },
-        "tags": [
-          "rest_api"
-        ]
-      },
-      "parameters": []
+        }
+      }
     },
     "/rest_api/observation_definition/{mnemonic}/": {
       "get": {
-        "operationId": "rest_api_observation_definition_read",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Retrieve the observation definition identified by the mnemonic",
         "description": "Get the observation definition details",
+        "operationId": "rest_api_observation_definition_read",
         "responses": {
           "200": {
             "description": "",
@@ -387,12 +406,10 @@
             }
           },
           "404": {
-            "description": "Observation Definition not found"
+            "description": "Observation Definition not found",
+            "content": {}
           }
-        },
-        "tags": [
-          "rest_api"
-        ]
+        }
       },
       "parameters": [
         {
@@ -407,9 +424,12 @@
     },
     "/rest_api/plan/": {
       "get": {
-        "operationId": "rest_api_plan_list",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Retrieve the list of available PUBLIC plans",
         "description": "List the PUBLIC plans available in the system",
+        "operationId": "rest_api_plan_list",
         "responses": {
           "200": {
             "description": "",
@@ -421,17 +441,24 @@
               }
             }
           }
-        },
-        "tags": [
-          "rest_api"
-        ]
+        }
       },
       "post": {
-        "operationId": "rest_api_plan_create",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Adds a new plan",
         "description": "Adds a new plan to the trajectory",
+        "operationId": "rest_api_plan_create",
         "requestBody": {
-          "$ref": "#/components/requestBodies/Plan"
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Plan"
+              }
+            }
+          },
+          "required": true
         },
         "responses": {
           "201": {
@@ -445,20 +472,21 @@
             }
           },
           "401": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "content": {}
           }
         },
-        "tags": [
-          "rest_api"
-        ]
-      },
-      "parameters": []
+        "x-codegen-request-body-name": "data"
+      }
     },
     "/rest_api/plan/{id}/": {
       "get": {
-        "operationId": "rest_api_plan_read",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Retrieve a plan",
         "description": "Retrieve, update or delete a segmentation instance.",
+        "operationId": "rest_api_plan_read",
         "responses": {
           "200": {
             "description": "",
@@ -471,20 +499,22 @@
             }
           },
           "401": {
-            "description": "Not authorized"
+            "description": "Not authorized",
+            "content": {}
           },
           "404": {
-            "description": "Plan not found"
+            "description": "Plan not found",
+            "content": {}
           }
-        },
-        "tags": [
-          "rest_api"
-        ]
+        }
       },
       "put": {
-        "operationId": "rest_api_plan_update",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Update a plan",
         "description": "Retrieve, update or delete a segmentation instance.",
+        "operationId": "rest_api_plan_update",
         "responses": {
           "200": {
             "description": "",
@@ -497,20 +527,22 @@
             }
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "content": {}
           },
           "404": {
-            "description": "Plan not found"
+            "description": "Plan not found",
+            "content": {}
           }
-        },
-        "tags": [
-          "rest_api"
-        ]
+        }
       },
       "delete": {
-        "operationId": "rest_api_plan_delete",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Delete a plan",
         "description": "Retrieve, update or delete a segmentation instance.",
+        "operationId": "rest_api_plan_delete",
         "responses": {
           "204": {
             "description": "",
@@ -523,12 +555,10 @@
             }
           },
           "404": {
-            "description": "Plan Not found"
+            "description": "Plan Not found",
+            "content": {}
           }
-        },
-        "tags": [
-          "rest_api"
-        ]
+        }
       },
       "parameters": [
         {
@@ -543,9 +573,12 @@
     },
     "/rest_api/plan/{id}/ptr": {
       "get": {
-        "operationId": "rest_api_plan_ptr_list",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Retrieve a plan PTR",
         "description": "Retrieve a PTR correspondig to a plan.",
+        "operationId": "rest_api_plan_ptr_list",
         "parameters": [
           {
             "name": "content",
@@ -558,15 +591,14 @@
         ],
         "responses": {
           "200": {
-            "description": "XML content or ptr link"
+            "description": "XML content or ptr link",
+            "content": {}
           },
           "404": {
-            "description": "Plan not found"
+            "description": "Plan not found",
+            "content": {}
           }
-        },
-        "tags": [
-          "rest_api"
-        ]
+        }
       },
       "parameters": [
         {
@@ -581,9 +613,12 @@
     },
     "/rest_api/plan/{id}/stats": {
       "get": {
-        "operationId": "rest_api_plan_stats_list",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Calculates time statistics of a plan.",
         "description": "Retrieves statistics for a plan.",
+        "operationId": "rest_api_plan_stats_list",
         "responses": {
           "200": {
             "description": "",
@@ -596,12 +631,10 @@
             }
           },
           "404": {
-            "description": "Plan not found"
+            "description": "Plan not found",
+            "content": {}
           }
-        },
-        "tags": [
-          "rest_api"
-        ]
+        }
       },
       "parameters": [
         {
@@ -616,64 +649,115 @@
     },
     "/rest_api/plan_ptr/": {
       "post": {
-        "operationId": "rest_api_plan_ptr_create",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Generates a JSON file with the pointing information filled",
         "description": "Adds a new plan to the trajectory",
+        "operationId": "rest_api_plan_ptr_create",
         "requestBody": {
-          "$ref": "#/components/requestBodies/Plan"
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Plan"
+              }
+            }
+          },
+          "required": true
         },
         "responses": {
           "200": {
-            "description": "JSON file with the pointing information filled"
+            "description": "JSON file with the pointing information filled",
+            "content": {}
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "content": {}
           }
         },
+        "x-codegen-request-body-name": "data"
+      }
+    },
+    "/rest_api/plan_ptr_skeleton/": {
+      "post": {
         "tags": [
           "rest_api"
-        ]
-      },
-      "parameters": []
+        ],
+        "summary": "Generates a XML PTR file with the pointing information filled",
+        "description": "Adds a new plan to the trajectory",
+        "operationId": "rest_api_plan_ptr_skeleton_create",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Plan"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "XML PTR file with the pointing information filled",
+            "content": {}
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {}
+          }
+        },
+        "x-codegen-request-body-name": "data"
+      }
     },
     "/rest_api/plan_ptr_xml/": {
       "post": {
-        "operationId": "rest_api_plan_ptr_xml_create",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Generates a XML PTR file with the pointing information filled",
         "description": "Adds a new plan to the trajectory",
+        "operationId": "rest_api_plan_ptr_xml_create",
         "requestBody": {
-          "$ref": "#/components/requestBodies/Plan"
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Plan"
+              }
+            }
+          },
+          "required": true
         },
         "responses": {
           "200": {
-            "description": "XML PTR file with the pointing information filled"
+            "description": "XML PTR file with the pointing information filled",
+            "content": {}
           },
           "400": {
-            "description": "Bad request"
+            "description": "Bad request",
+            "content": {}
           }
         },
-        "tags": [
-          "rest_api"
-        ]
-      },
-      "parameters": []
+        "x-codegen-request-body-name": "data"
+      }
     },
     "/rest_api/plan_simphony/groups/{id}/": {
       "get": {
-        "operationId": "rest_api_plan_simphony_groups_read",
-        "summary": "Retrieve the groups information of a timeline",
-        "description": "Returns the segment group information providing the segments belonging to a given segment group,\ntheir duration and the resources associated to the group",
-        "responses": {
-          "200": {
-            "description": "Simphony Plan Serializer of groups"
-          },
-          "404": {
-            "description": "Plan not found"
-          }
-        },
         "tags": [
           "rest_api"
-        ]
+        ],
+        "summary": "Retrieve the groups information of a timeline",
+        "description": "Returns the segment group information providing the segments belonging to a given segment group,\ntheir duration and the resources associated to the group",
+        "operationId": "rest_api_plan_simphony_groups_read",
+        "responses": {
+          "200": {
+            "description": "Simphony Plan Serializer of groups",
+            "content": {}
+          },
+          "404": {
+            "description": "Plan not found",
+            "content": {}
+          }
+        }
       },
       "parameters": [
         {
@@ -688,32 +772,32 @@
     },
     "/rest_api/plan_simphony/opps/{id}/": {
       "get": {
-        "operationId": "rest_api_plan_simphony_opps_read",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Retrieve a plan timeline for Simphony subsystem",
         "description": "Restricts the returned queries by filtering against a **body** query parameter in the URL.\nThe **body** expected value is the JSON string corresponding to the following structure:\n* start: the date formatted as ISO8601 in UTC scale (2030-07-05T01:44:47Z)\n* end: the date formatted as ISO8601 in UTC scale (2030-07-05T01:44:47Z)\n* mode: \"strict\" | \"open\" optional: \"open\" Includes the segments partially included in the period",
+        "operationId": "rest_api_plan_simphony_opps_read",
         "parameters": [
           {
             "name": "start",
             "in": "query",
-            "required": false,
             "schema": {
-              "type": "string",
-              "minLength": 1
+              "minLength": 1,
+              "type": "string"
             }
           },
           {
             "name": "end",
             "in": "query",
-            "required": false,
             "schema": {
-              "type": "string",
-              "minLength": 1
+              "minLength": 1,
+              "type": "string"
             }
           },
           {
             "name": "mode",
             "in": "query",
-            "required": false,
             "schema": {
               "type": "string",
               "enum": [
@@ -735,12 +819,10 @@
             }
           },
           "404": {
-            "description": "Plan not found"
+            "description": "Plan not found",
+            "content": {}
           }
-        },
-        "tags": [
-          "rest_api"
-        ]
+        }
       },
       "parameters": [
         {
@@ -755,32 +837,32 @@
     },
     "/rest_api/plan_simphony/timeline/{id}/": {
       "get": {
-        "operationId": "rest_api_plan_simphony_timeline_read",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Retrieve a plan timeline for Simphony subsystem",
         "description": "Restricts the returned queries by filtering against a **body** query parameter in the URL.\nThe **body** expected value is the JSON string corresponding to the following structure:\n* start: the date formatted as ISO8601 in UTC scale (2030-07-05T01:44:47Z)\n* end: the date formatted as ISO8601 in UTC scale (2030-07-05T01:44:47Z)\n* mode: \"strict\" | \"open\" optional: \"open\" Includes the segments partially included in the period",
+        "operationId": "rest_api_plan_simphony_timeline_read",
         "parameters": [
           {
             "name": "start",
             "in": "query",
-            "required": false,
             "schema": {
-              "type": "string",
-              "minLength": 1
+              "minLength": 1,
+              "type": "string"
             }
           },
           {
             "name": "end",
             "in": "query",
-            "required": false,
             "schema": {
-              "type": "string",
-              "minLength": 1
+              "minLength": 1,
+              "type": "string"
             }
           },
           {
             "name": "mode",
             "in": "query",
-            "required": false,
             "schema": {
               "type": "string",
               "enum": [
@@ -802,12 +884,10 @@
             }
           },
           "404": {
-            "description": "Plan not found"
+            "description": "Plan not found",
+            "content": {}
           }
-        },
-        "tags": [
-          "rest_api"
-        ]
+        }
       },
       "parameters": [
         {
@@ -822,32 +902,32 @@
     },
     "/rest_api/plan_simphony/{id}/": {
       "get": {
-        "operationId": "rest_api_plan_simphony_read",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Retrieve a plan timeline for Simphony subsystem",
         "description": "Restricts the returned queries by filtering against a **body** query parameter in the URL.\nThe **body** expected value is the JSON string corresponding to the following structure:\n* start: the date formatted as ISO8601 in UTC scale (2030-07-05T01:44:47Z)\n* end: the date formatted as ISO8601 in UTC scale (2030-07-05T01:44:47Z)\n* mode: \"strict\" | \"open\" optional: \"open\" Includes the segments partially included in the period",
+        "operationId": "rest_api_plan_simphony_read",
         "parameters": [
           {
             "name": "start",
             "in": "query",
-            "required": false,
             "schema": {
-              "type": "string",
-              "minLength": 1
+              "minLength": 1,
+              "type": "string"
             }
           },
           {
             "name": "end",
             "in": "query",
-            "required": false,
             "schema": {
-              "type": "string",
-              "minLength": 1
+              "minLength": 1,
+              "type": "string"
             }
           },
           {
             "name": "mode",
             "in": "query",
-            "required": false,
             "schema": {
               "type": "string",
               "enum": [
@@ -869,12 +949,10 @@
             }
           },
           "404": {
-            "description": "Plan not found"
+            "description": "Plan not found",
+            "content": {}
           }
-        },
-        "tags": [
-          "rest_api"
-        ]
+        }
       },
       "parameters": [
         {
@@ -889,9 +967,12 @@
     },
     "/rest_api/segment_definition/{mnemonic}/": {
       "get": {
-        "operationId": "rest_api_segment_definition_read",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Retrieve the segment definition identified by the mnemonic",
         "description": "List all segment definition",
+        "operationId": "rest_api_segment_definition_read",
         "responses": {
           "200": {
             "description": "",
@@ -904,12 +985,10 @@
             }
           },
           "404": {
-            "description": "Segment Definition not found"
+            "description": "Segment Definition not found",
+            "content": {}
           }
-        },
-        "tags": [
-          "rest_api"
-        ]
+        }
       },
       "parameters": [
         {
@@ -924,9 +1003,12 @@
     },
     "/rest_api/series/": {
       "get": {
-        "operationId": "rest_api_series_list",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Retrieve a geometry series of a trajectory",
         "description": "Restricts the returned queries by filtering against a **body** query parameter in the URL.\nThe **body** expected value is the JSON string corresponding to the following structure:\n* start: the date formatted as ISO8601 in UTC scale (2030-07-05T01:44:47Z)\n* end: the date formatted as ISO8601 in UTC scale (2030-07-05T01:44:47Z)\n* trajectory: the name of the trajectory\n* series: the name of the series to be retrieved",
+        "operationId": "rest_api_series_list",
         "responses": {
           "200": {
             "description": "",
@@ -942,36 +1024,35 @@
             }
           },
           "400": {
-            "description": "body parameter not parseable or not present"
+            "description": "body parameter not parseable or not present",
+            "content": {}
           }
-        },
-        "tags": [
-          "rest_api"
-        ]
-      },
-      "parameters": []
+        }
+      }
     },
     "/rest_api/session_flush/": {
       "get": {
-        "operationId": "rest_api_session_flush_list",
-        "summary": "Flush the session",
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "Session flushed"
-          }
-        },
         "tags": [
           "rest_api"
-        ]
-      },
-      "parameters": []
+        ],
+        "summary": "Flush the session",
+        "operationId": "rest_api_session_flush_list",
+        "responses": {
+          "200": {
+            "description": "Session flushed",
+            "content": {}
+          }
+        }
+      }
     },
     "/rest_api/trajectory/": {
       "get": {
-        "operationId": "rest_api_trajectory_list",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Retrieve the trajectory list",
         "description": "List all trajectory",
+        "operationId": "rest_api_trajectory_list",
         "responses": {
           "200": {
             "description": "",
@@ -986,18 +1067,17 @@
               }
             }
           }
-        },
-        "tags": [
-          "rest_api"
-        ]
-      },
-      "parameters": []
+        }
+      }
     },
     "/rest_api/trajectory/{mnemonic}/": {
       "get": {
-        "operationId": "rest_api_trajectory_read",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Retrieve the trajectory identified by the mnemonic",
         "description": "List all trajectory",
+        "operationId": "rest_api_trajectory_read",
         "responses": {
           "200": {
             "description": "",
@@ -1010,12 +1090,10 @@
             }
           },
           "404": {
-            "description": "Trajectory not found"
+            "description": "Trajectory not found",
+            "content": {}
           }
-        },
-        "tags": [
-          "rest_api"
-        ]
+        }
       },
       "parameters": [
         {
@@ -1030,9 +1108,12 @@
     },
     "/rest_api/trajectory/{mnemonic}/detailed_scenario": {
       "get": {
-        "operationId": "rest_api_trajectory_detailed_scenario_list",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Retrieve the detailed scenarios belonging to the trajectory",
         "description": "List all the detailed scenarios belonging to the trajectory",
+        "operationId": "rest_api_trajectory_detailed_scenario_list",
         "responses": {
           "200": {
             "description": "",
@@ -1045,12 +1126,10 @@
             }
           },
           "404": {
-            "description": "Trajectory not found"
+            "description": "Trajectory not found",
+            "content": {}
           }
-        },
-        "tags": [
-          "rest_api"
-        ]
+        }
       },
       "parameters": [
         {
@@ -1065,9 +1144,12 @@
     },
     "/rest_api/trajectory/{mnemonic}/engineering_segment_types": {
       "get": {
-        "operationId": "rest_api_trajectory_engineering_segment_types_list",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Retrieve the engineering segments belonging to the trajectory",
         "description": "List all engineering segments types of a trajectory",
+        "operationId": "rest_api_trajectory_engineering_segment_types_list",
         "responses": {
           "200": {
             "description": "",
@@ -1083,12 +1165,10 @@
             }
           },
           "404": {
-            "description": "Trajectory not found"
+            "description": "Trajectory not found",
+            "content": {}
           }
-        },
-        "tags": [
-          "rest_api"
-        ]
+        }
       },
       "parameters": [
         {
@@ -1103,9 +1183,12 @@
     },
     "/rest_api/trajectory/{mnemonic}/engineering_segments": {
       "get": {
-        "operationId": "rest_api_trajectory_engineering_segments_list",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Retrieve the engineering segments belonging to the trajectory",
         "description": "List all engineering segments of a trajectory",
+        "operationId": "rest_api_trajectory_engineering_segments_list",
         "responses": {
           "200": {
             "description": "",
@@ -1121,12 +1204,10 @@
             }
           },
           "404": {
-            "description": "Trajectory not found"
+            "description": "Trajectory not found",
+            "content": {}
           }
-        },
-        "tags": [
-          "rest_api"
-        ]
+        }
       },
       "parameters": [
         {
@@ -1141,9 +1222,12 @@
     },
     "/rest_api/trajectory/{mnemonic}/event": {
       "get": {
-        "operationId": "rest_api_trajectory_event_list",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Retrieve the events definitions applicable for the trajectory",
         "description": "List all the geometry event definitions applicable to the trajectory",
+        "operationId": "rest_api_trajectory_event_list",
         "responses": {
           "200": {
             "description": "",
@@ -1159,12 +1243,10 @@
             }
           },
           "404": {
-            "description": "Trajectory not found"
+            "description": "Trajectory not found",
+            "content": {}
           }
-        },
-        "tags": [
-          "rest_api"
-        ]
+        }
       },
       "parameters": [
         {
@@ -1179,9 +1261,12 @@
     },
     "/rest_api/trajectory/{mnemonic}/plan": {
       "get": {
-        "operationId": "rest_api_trajectory_plan_list",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Retrieve the plans belonging to the trajectory",
         "description": "List all the plans belonging to the trajectory",
+        "operationId": "rest_api_trajectory_plan_list",
         "responses": {
           "200": {
             "description": "",
@@ -1197,12 +1282,10 @@
             }
           },
           "404": {
-            "description": "Trajectory not found"
+            "description": "Trajectory not found",
+            "content": {}
           }
-        },
-        "tags": [
-          "rest_api"
-        ]
+        }
       },
       "parameters": [
         {
@@ -1217,9 +1300,12 @@
     },
     "/rest_api/trajectory/{mnemonic}/ptr": {
       "get": {
-        "operationId": "rest_api_trajectory_ptr_list",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Retrieve a trajectory PTR",
         "description": "Retrieve a PTR corresponding to a trajectory.",
+        "operationId": "rest_api_trajectory_ptr_list",
         "parameters": [
           {
             "name": "content",
@@ -1232,15 +1318,14 @@
         ],
         "responses": {
           "200": {
-            "description": "XML content or ptr link"
+            "description": "XML content or ptr link",
+            "content": {}
           },
           "404": {
-            "description": "Trajectory not found"
+            "description": "Trajectory not found",
+            "content": {}
           }
-        },
-        "tags": [
-          "rest_api"
-        ]
+        }
       },
       "parameters": [
         {
@@ -1255,9 +1340,12 @@
     },
     "/rest_api/trajectory/{mnemonic}/segment_definition": {
       "get": {
-        "operationId": "trajectory_segment_definitions",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Retrieve the segment definitions applicable for the trajectory",
         "description": "List all the segment definitions applicable to the trajectory",
+        "operationId": "trajectory_segment_definitions",
         "responses": {
           "200": {
             "description": "",
@@ -1273,12 +1361,10 @@
             }
           },
           "404": {
-            "description": "Trajectory not found"
+            "description": "Trajectory not found",
+            "content": {}
           }
-        },
-        "tags": [
-          "rest_api"
-        ]
+        }
       },
       "parameters": [
         {
@@ -1293,9 +1379,12 @@
     },
     "/rest_api/trajectory/{mnemonic}/series": {
       "get": {
-        "operationId": "rest_api_trajectory_series_list",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Retrieve the series definitions applicable for the trajectory",
         "description": "List all the series applicable to the trajectory",
+        "operationId": "rest_api_trajectory_series_list",
         "responses": {
           "200": {
             "description": "",
@@ -1311,12 +1400,10 @@
             }
           },
           "404": {
-            "description": "Trajectory not found"
+            "description": "Trajectory not found",
+            "content": {}
           }
-        },
-        "tags": [
-          "rest_api"
-        ]
+        }
       },
       "parameters": [
         {
@@ -1331,9 +1418,12 @@
     },
     "/rest_api/user/{username}/": {
       "get": {
-        "operationId": "rest_api_user_read",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Retrieve the user details by username",
         "description": "API endpoint that allows users to be viewed or edited.",
+        "operationId": "rest_api_user_read",
         "responses": {
           "200": {
             "description": "",
@@ -1346,15 +1436,14 @@
             }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Unauthorized",
+            "content": {}
           },
           "404": {
-            "description": "User not found"
+            "description": "User not found",
+            "content": {}
           }
-        },
-        "tags": [
-          "rest_api"
-        ]
+        }
       },
       "parameters": [
         {
@@ -1369,9 +1458,12 @@
     },
     "/rest_api/version/": {
       "get": {
-        "operationId": "rest_api_version_list",
+        "tags": [
+          "rest_api"
+        ],
         "summary": "Retrieve the api version",
         "description": "Retrieve the version of the api",
+        "operationId": "rest_api_version_list",
         "responses": {
           "200": {
             "description": "",
@@ -1384,61 +1476,35 @@
             }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Unauthorized",
+            "content": {}
           },
           "404": {
-            "description": "User not found"
+            "description": "User not found",
+            "content": {}
           }
-        },
-        "tags": [
-          "rest_api"
-        ]
-      },
-      "parameters": []
+        }
+      }
     }
   },
-  "servers": [
-    {
-      "url": "https://juicesoc.esac.esa.int/"
-    }
-  ],
   "components": {
-    "requestBodies": {
-      "Plan": {
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/Plan"
-            }
-          }
-        },
-        "required": true
-      }
-    },
-    "securitySchemes": {
-      "JWT": {
-        "in": "header",
-        "name": "Authorization",
-        "type": "apiKey"
-      }
-    },
     "schemas": {
       "JSONWebToken": {
         "required": [
-          "username",
-          "password"
+          "password",
+          "username"
         ],
         "type": "object",
         "properties": {
           "username": {
             "title": "Username",
-            "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "password": {
             "title": "Password",
-            "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           }
         }
       },
@@ -1450,134 +1516,139 @@
         "properties": {
           "token": {
             "title": "Token",
-            "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           }
         }
       },
       "ConfigurationItem": {
         "required": [
-          "name",
-          "mnemonic"
+          "mnemonic",
+          "name"
         ],
         "type": "object",
         "properties": {
           "name": {
             "title": "Name",
-            "type": "string",
             "maxLength": 128,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "mnemonic": {
             "title": "Mnemonic",
-            "type": "string",
             "maxLength": 64,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           }
         }
       },
       "Unit": {
         "required": [
+          "mnemonic",
           "name",
-          "mnemonic"
+          "ratio"
         ],
         "type": "object",
         "properties": {
           "name": {
             "title": "Name",
-            "type": "string",
             "maxLength": 128,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "mnemonic": {
             "title": "Mnemonic",
-            "type": "string",
             "maxLength": 64,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "category": {
             "title": "Category",
             "type": "string",
             "readOnly": true
+          },
+          "ratio": {
+            "title": "Ratio",
+            "type": "number"
           }
         }
       },
       "InstrumentType": {
         "required": [
-          "name",
-          "mnemonic"
+          "mnemonic",
+          "name"
         ],
         "type": "object",
         "properties": {
           "name": {
             "title": "Name",
-            "type": "string",
             "maxLength": 128,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "mnemonic": {
             "title": "Mnemonic",
-            "type": "string",
             "maxLength": 64,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "instrument_set": {
+            "uniqueItems": true,
             "type": "array",
+            "readOnly": true,
             "items": {
               "type": "string"
-            },
-            "readOnly": true,
-            "uniqueItems": true
+            }
           }
         }
       },
       "ResourceCategory": {
         "required": [
-          "name",
+          "category_type",
           "mnemonic",
-          "category_type"
+          "name"
         ],
         "type": "object",
         "properties": {
           "name": {
             "title": "Name",
-            "type": "string",
             "maxLength": 128,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "mnemonic": {
             "title": "Mnemonic",
-            "type": "string",
             "maxLength": 64,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "category_type": {
             "title": "Category type",
-            "type": "string",
             "maxLength": 128,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           }
         }
       },
       "PlatformPowerProfile": {
         "required": [
-          "name",
           "mnemonic",
+          "name",
           "power"
         ],
         "type": "object",
         "properties": {
           "name": {
             "title": "Name",
-            "type": "string",
             "maxLength": 128,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "mnemonic": {
             "title": "Mnemonic",
-            "type": "string",
             "maxLength": 64,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "power": {
             "title": "Power",
@@ -1641,17 +1712,17 @@
           },
           "version": {
             "title": "Version",
-            "type": "string",
             "maxLength": 64,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           }
         }
       },
       "DetailedScenarioList": {
         "required": [
-          "trajectory",
+          "mnemonic",
           "name",
-          "mnemonic"
+          "trajectory"
         ],
         "type": "object",
         "properties": {
@@ -1661,9 +1732,9 @@
           },
           "name": {
             "title": "Name",
-            "type": "string",
             "maxLength": 128,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "created": {
             "title": "Created",
@@ -1673,9 +1744,9 @@
           },
           "mnemonic": {
             "title": "Mnemonic",
-            "type": "string",
             "maxLength": 64,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "id": {
             "title": "ID",
@@ -1689,35 +1760,35 @@
           },
           "description": {
             "title": "Description",
-            "type": "string",
             "maxLength": 1024,
+            "type": "string",
             "nullable": true
           },
           "scenario_json_file": {
             "title": "Scenario json file",
             "type": "string",
-            "readOnly": true,
-            "format": "uri"
+            "format": "uri",
+            "readOnly": true
           },
           "start": {
             "title": "Start",
-            "type": "string",
             "maxLength": 64,
+            "type": "string",
             "nullable": true
           },
           "end": {
             "title": "End",
-            "type": "string",
             "maxLength": 64,
+            "type": "string",
             "nullable": true
           }
         }
       },
       "DetailedScenario": {
         "required": [
-          "trajectory",
           "mnemonic",
-          "name"
+          "name",
+          "trajectory"
         ],
         "type": "object",
         "properties": {
@@ -1732,39 +1803,39 @@
           },
           "mnemonic": {
             "title": "Mnemonic",
-            "type": "string",
             "maxLength": 64,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "name": {
             "title": "Name",
-            "type": "string",
             "maxLength": 128,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "description": {
             "title": "Description",
-            "type": "string",
             "maxLength": 1024,
+            "type": "string",
             "nullable": true
           },
           "scenario_json_file": {
             "title": "Scenario json file",
             "type": "string",
-            "readOnly": true,
             "format": "uri",
-            "nullable": true
+            "nullable": true,
+            "readOnly": true
           },
           "start": {
             "title": "Start",
-            "type": "string",
             "maxLength": 64,
+            "type": "string",
             "nullable": true
           },
           "end": {
             "title": "End",
-            "type": "string",
             "maxLength": 64,
+            "type": "string",
             "nullable": true
           }
         }
@@ -1772,9 +1843,9 @@
       "ResourceProfile": {
         "required": [
           "category",
+          "instrument_type",
           "target",
-          "unit",
-          "instrument_type"
+          "unit"
         ],
         "type": "object",
         "properties": {
@@ -1804,9 +1875,9 @@
       "InstrumentResourceProfile": {
         "required": [
           "category",
+          "instrument",
           "target",
-          "unit",
-          "instrument"
+          "unit"
         ],
         "type": "object",
         "properties": {
@@ -1835,45 +1906,45 @@
       },
       "Segment": {
         "required": [
-          "start",
           "end",
-          "segment_definition",
-          "overwritten",
           "instrument_overwritten",
+          "overwritten",
+          "segment_definition",
+          "start",
           "timeline"
         ],
         "type": "object",
         "properties": {
           "start": {
             "title": "Start",
-            "type": "string",
             "maxLength": 50,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "end": {
             "title": "End",
-            "type": "string",
             "maxLength": 50,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "name": {
             "title": "Name",
-            "type": "string",
-            "maxLength": 128
+            "maxLength": 128,
+            "type": "string"
           },
           "resources": {
             "type": "array",
+            "nullable": true,
             "items": {
               "$ref": "#/components/schemas/ResourceProfile"
-            },
-            "nullable": true
+            }
           },
           "instrument_resources": {
             "type": "array",
+            "nullable": true,
             "items": {
               "$ref": "#/components/schemas/InstrumentResourceProfile"
-            },
-            "nullable": true
+            }
           },
           "segment_definition": {
             "title": "Segment definition",
@@ -1908,8 +1979,8 @@
           },
           "pointing_request_snippet": {
             "title": "Pointing request snippet",
-            "type": "string",
             "minLength": 1,
+            "type": "string",
             "nullable": true
           },
           "slew_policy": {
@@ -1919,57 +1990,57 @@
           },
           "pointing_target": {
             "title": "Pointing Target",
-            "type": "string",
             "maxLength": 256,
+            "type": "string",
             "nullable": true
           },
           "scheduling_priority": {
             "title": "Scheduling Priority",
-            "type": "integer",
             "maximum": 2147483647,
             "minimum": -2147483648,
+            "type": "integer",
             "nullable": true
           },
           "origin": {
             "title": "Origin",
-            "type": "string",
             "maxLength": 128,
+            "type": "string",
             "nullable": true
           }
         }
       },
       "SegmentGroup": {
         "required": [
-          "name",
-          "mnemonic"
+          "mnemonic",
+          "name"
         ],
         "type": "object",
         "properties": {
           "name": {
             "title": "Name",
-            "type": "string",
             "maxLength": 128,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "mnemonic": {
             "title": "Mnemonic",
-            "type": "string",
             "maxLength": 64,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "resources": {
             "type": "array",
+            "nullable": true,
             "items": {
               "$ref": "#/components/schemas/ResourceProfile"
-            },
-            "nullable": true
+            }
           },
           "instrument_resources": {
             "type": "array",
+            "nullable": true,
             "items": {
               "$ref": "#/components/schemas/InstrumentResourceProfile"
-            },
-            "nullable": true
+            }
           },
           "platform_power_profile": {
             "title": "Platform power profile",
@@ -1980,12 +2051,12 @@
       },
       "Plan": {
         "required": [
-          "trajectory",
+          "is_public",
           "mnemonic",
           "name",
-          "is_public",
+          "segment_groups",
           "segments",
-          "segment_groups"
+          "trajectory"
         ],
         "type": "object",
         "properties": {
@@ -1995,20 +2066,20 @@
           },
           "mnemonic": {
             "title": "Mnemonic",
-            "type": "string",
             "maxLength": 64,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "name": {
             "title": "Name",
-            "type": "string",
             "maxLength": 128,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "description": {
             "title": "Description",
-            "type": "string",
             "maxLength": 1024,
+            "type": "string",
             "nullable": true
           },
           "is_public": {
@@ -2056,26 +2127,26 @@
         "properties": {
           "start": {
             "title": "Start",
-            "type": "string",
             "maxLength": 64,
+            "type": "string",
             "nullable": true
           },
           "end": {
             "title": "End",
-            "type": "string",
             "maxLength": 64,
+            "type": "string",
             "nullable": true
           },
           "name": {
             "title": "Name",
-            "type": "string",
             "maxLength": 128,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "description": {
             "title": "Description",
-            "type": "string",
             "maxLength": 1024,
+            "type": "string",
             "nullable": true
           },
           "definition": {
@@ -2087,34 +2158,34 @@
       },
       "Mode": {
         "required": [
-          "name",
           "mnemonic",
+          "name",
           "payload"
         ],
         "type": "object",
         "properties": {
           "name": {
             "title": "Name",
-            "type": "string",
             "maxLength": 128,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "mnemonic": {
             "title": "Mnemonic",
-            "type": "string",
             "maxLength": 64,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "description": {
             "title": "Description",
-            "type": "string",
             "maxLength": 1024,
+            "type": "string",
             "nullable": true
           },
           "mapps_mode": {
             "title": "MAPPS Mode",
-            "type": "string",
             "maxLength": 200,
+            "type": "string",
             "nullable": true
           },
           "payload": {
@@ -2137,8 +2208,8 @@
           },
           "comments": {
             "title": "Comments",
-            "type": "string",
             "maxLength": 100,
+            "type": "string",
             "nullable": true
           }
         }
@@ -2146,8 +2217,8 @@
       "DataProfile": {
         "required": [
           "event",
-          "time",
-          "mode"
+          "mode",
+          "time"
         ],
         "type": "object",
         "properties": {
@@ -2157,9 +2228,9 @@
           },
           "time": {
             "title": "Time",
-            "type": "string",
             "maxLength": 50,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "mode": {
             "title": "Mode",
@@ -2172,8 +2243,8 @@
           },
           "comment": {
             "title": "Comment",
-            "description": "Comment when exported to observation definition file",
             "type": "string",
+            "description": "Comment when exported to observation definition file",
             "nullable": true
           },
           "unit": {
@@ -2186,8 +2257,8 @@
       "PowerProfile": {
         "required": [
           "event",
-          "time",
-          "mode"
+          "mode",
+          "time"
         ],
         "type": "object",
         "properties": {
@@ -2197,9 +2268,9 @@
           },
           "time": {
             "title": "Time",
-            "type": "string",
             "maxLength": 50,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "mode": {
             "title": "Mode",
@@ -2212,8 +2283,8 @@
           },
           "comment": {
             "title": "Comment",
-            "description": "Comment when exported to observation definition file",
             "type": "string",
+            "description": "Comment when exported to observation definition file",
             "nullable": true
           },
           "unit": {
@@ -2225,12 +2296,12 @@
       },
       "ObservationDefinition": {
         "required": [
-          "name",
           "mnemonic",
+          "name",
           "payload",
           "pointing_type",
-          "target",
-          "segment_definitions"
+          "segment_definitions",
+          "target"
         ],
         "type": "object",
         "properties": {
@@ -2241,15 +2312,15 @@
           },
           "name": {
             "title": "Name",
-            "type": "string",
             "maxLength": 128,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "mnemonic": {
             "title": "Mnemonic",
-            "type": "string",
             "maxLength": 64,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "description": {
             "title": "Description",
@@ -2270,31 +2341,31 @@
           },
           "data_profile": {
             "type": "array",
+            "nullable": true,
             "items": {
               "$ref": "#/components/schemas/DataProfile"
-            },
-            "nullable": true
+            }
           },
           "power_profile": {
             "type": "array",
+            "nullable": true,
             "items": {
               "$ref": "#/components/schemas/PowerProfile"
-            },
-            "nullable": true
+            }
           },
           "PTRSnippet_file": {
             "title": "PTRSnippet file",
             "type": "string",
-            "readOnly": true,
             "format": "uri",
-            "nullable": true
+            "nullable": true,
+            "readOnly": true
           },
           "ITLSnippet_file": {
             "title": "ITLSnippet file",
             "type": "string",
-            "readOnly": true,
             "format": "uri",
-            "nullable": true
+            "nullable": true,
+            "readOnly": true
           },
           "PTRSnippet": {
             "title": "Default PTR Snippet",
@@ -2307,24 +2378,24 @@
             "nullable": true
           },
           "segment_definitions": {
+            "uniqueItems": true,
             "type": "array",
             "items": {
               "type": "string"
-            },
-            "uniqueItems": true
+            }
           }
         }
       },
       "ObservationDefinitionExtend": {
         "required": [
-          "name",
+          "AvoidanceRules",
+          "SchedulingRules",
           "mnemonic",
+          "name",
           "payload",
           "pointing_type",
-          "target",
           "segment_definitions",
-          "SchedulingRules",
-          "AvoidanceRules"
+          "target"
         ],
         "type": "object",
         "properties": {
@@ -2335,15 +2406,15 @@
           },
           "name": {
             "title": "Name",
-            "type": "string",
             "maxLength": 128,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "mnemonic": {
             "title": "Mnemonic",
-            "type": "string",
             "maxLength": 64,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "description": {
             "title": "Description",
@@ -2364,31 +2435,31 @@
           },
           "data_profile": {
             "type": "array",
+            "nullable": true,
             "items": {
               "$ref": "#/components/schemas/DataProfile"
-            },
-            "nullable": true
+            }
           },
           "power_profile": {
             "type": "array",
+            "nullable": true,
             "items": {
               "$ref": "#/components/schemas/PowerProfile"
-            },
-            "nullable": true
+            }
           },
           "PTRSnippet_file": {
             "title": "PTRSnippet file",
             "type": "string",
-            "readOnly": true,
             "format": "uri",
-            "nullable": true
+            "nullable": true,
+            "readOnly": true
           },
           "ITLSnippet_file": {
             "title": "ITLSnippet file",
             "type": "string",
-            "readOnly": true,
             "format": "uri",
-            "nullable": true
+            "nullable": true,
+            "readOnly": true
           },
           "PTRSnippet": {
             "title": "Default PTR Snippet",
@@ -2401,23 +2472,23 @@
             "nullable": true
           },
           "segment_definitions": {
+            "uniqueItems": true,
             "type": "array",
             "items": {
               "type": "string"
-            },
-            "uniqueItems": true
+            }
           },
           "SchedulingRules": {
             "title": "Scheduling Rules",
-            "description": "any rule that is used to schedule the observation: repetition rules, continuous (plasma instruments), one-off, every orbit, every day, etc",
+            "minLength": 1,
             "type": "string",
-            "minLength": 1
+            "description": "any rule that is used to schedule the observation: repetition rules, continuous (plasma instruments), one-off, every orbit, every day, etc"
           },
           "AvoidanceRules": {
             "title": "Avoidance Rules",
-            "description": "conditions that make the observation not possible (e.g. thruster firing)",
+            "minLength": 1,
             "type": "string",
-            "minLength": 1
+            "description": "conditions that make the observation not possible (e.g. thruster firing)"
           },
           "log": {
             "title": "References",
@@ -2437,32 +2508,32 @@
           "Support_Plot_1": {
             "title": "Support Plot 1",
             "type": "string",
-            "readOnly": true,
             "format": "uri",
-            "nullable": true
+            "nullable": true,
+            "readOnly": true
           },
           "Support_Plot_2": {
             "title": "Support Plot 2",
             "type": "string",
-            "readOnly": true,
             "format": "uri",
-            "nullable": true
+            "nullable": true,
+            "readOnly": true
           },
           "Support_Plot_3": {
             "title": "Support Plot 3",
             "type": "string",
-            "readOnly": true,
             "format": "uri",
-            "nullable": true
+            "nullable": true,
+            "readOnly": true
           }
         }
       },
       "PlanList": {
         "required": [
-          "trajectory",
-          "name",
+          "is_public",
           "mnemonic",
-          "is_public"
+          "name",
+          "trajectory"
         ],
         "type": "object",
         "properties": {
@@ -2472,9 +2543,9 @@
           },
           "name": {
             "title": "Name",
-            "type": "string",
             "maxLength": 128,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "created": {
             "title": "Created",
@@ -2484,9 +2555,9 @@
           },
           "mnemonic": {
             "title": "Mnemonic",
-            "type": "string",
             "maxLength": 64,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "id": {
             "title": "ID",
@@ -2500,8 +2571,8 @@
           },
           "description": {
             "title": "Description",
-            "type": "string",
             "maxLength": 1024,
+            "type": "string",
             "nullable": true
           },
           "is_public": {
@@ -2585,24 +2656,24 @@
       },
       "ReadOnlySegmentGroup": {
         "required": [
-          "name",
+          "instrument_resources",
           "mnemonic",
-          "resources",
-          "instrument_resources"
+          "name",
+          "resources"
         ],
         "type": "object",
         "properties": {
           "name": {
             "title": "Name",
-            "type": "string",
             "maxLength": 128,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "mnemonic": {
             "title": "Mnemonic",
-            "type": "string",
             "maxLength": 64,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "resources": {
             "type": "array",
@@ -2625,11 +2696,11 @@
       },
       "ReadOnlyPlan": {
         "required": [
-          "trajectory",
+          "is_public",
           "mnemonic",
           "name",
-          "is_public",
-          "segment_groups"
+          "segment_groups",
+          "trajectory"
         ],
         "type": "object",
         "properties": {
@@ -2639,20 +2710,20 @@
           },
           "mnemonic": {
             "title": "Mnemonic",
-            "type": "string",
             "maxLength": 64,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "name": {
             "title": "Name",
-            "type": "string",
             "maxLength": 128,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "description": {
             "title": "Description",
-            "type": "string",
             "maxLength": 1024,
+            "type": "string",
             "nullable": true
           },
           "is_public": {
@@ -2723,66 +2794,66 @@
       },
       "SpiceKernel": {
         "required": [
-          "name",
           "mnemonic",
+          "name",
           "path"
         ],
         "type": "object",
         "properties": {
           "name": {
             "title": "Name",
-            "type": "string",
             "maxLength": 128,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "mnemonic": {
             "title": "Mnemonic",
-            "type": "string",
             "maxLength": 128,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "path": {
             "title": "Path",
-            "type": "string",
             "maxLength": 512,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           }
         }
       },
       "SimphonyPlan": {
         "required": [
-          "trajectory",
-          "mnemonic",
-          "is_public",
-          "segment_timeline",
-          "segment_opportunities",
-          "kernels",
-          "skd_version",
-          "metakernel",
           "default_block",
-          "default_slew_policy"
+          "default_slew_policy",
+          "is_public",
+          "kernels",
+          "metakernel",
+          "mnemonic",
+          "segment_opportunities",
+          "segment_timeline",
+          "skd_version",
+          "trajectory"
         ],
         "type": "object",
         "properties": {
           "trajectory": {
             "title": "Trajectory",
-            "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "mnemonic": {
             "title": "Mnemonic",
-            "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "name": {
             "title": "Name",
-            "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "description": {
             "title": "Description",
-            "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "is_public": {
             "title": "Is public",
@@ -2808,71 +2879,79 @@
           },
           "skd_version": {
             "title": "Skd version",
-            "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "metakernel": {
             "title": "Metakernel",
-            "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "default_block": {
             "title": "Default block",
-            "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "default_slew_policy": {
             "title": "Default slew policy",
-            "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           }
         }
       },
       "SegmentDefinition": {
         "required": [
-          "name",
           "mnemonic",
+          "name",
+          "observation_definitions",
           "prime_segment",
-          "observation_definitions"
+          "riders"
         ],
         "type": "object",
         "properties": {
           "name": {
             "title": "Name",
-            "type": "string",
             "maxLength": 128,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "mnemonic": {
             "title": "Mnemonic",
-            "type": "string",
             "maxLength": 64,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "description": {
             "title": "Description",
-            "type": "string",
             "maxLength": 1024,
+            "type": "string",
             "nullable": true
           },
           "resources": {
             "type": "array",
+            "nullable": true,
             "items": {
               "$ref": "#/components/schemas/ResourceProfile"
-            },
-            "nullable": true
+            }
           },
           "instrument_resources": {
             "type": "array",
+            "nullable": true,
             "items": {
               "$ref": "#/components/schemas/InstrumentResourceProfile"
-            },
-            "nullable": true
+            }
           },
           "group": {
             "title": "Group",
             "type": "string",
             "readOnly": true
+          },
+          "riders": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "prime_segment": {
             "title": "Prime Segment",
@@ -2881,9 +2960,9 @@
           "pointing_request_file": {
             "title": "Pointing request file",
             "type": "string",
-            "readOnly": true,
             "format": "uri",
-            "nullable": true
+            "nullable": true,
+            "readOnly": true
           },
           "slew_policy": {
             "title": "Slew policy",
@@ -2892,8 +2971,8 @@
           },
           "pointing_target": {
             "title": "Pointing Target",
-            "type": "string",
             "maxLength": 256,
+            "type": "string",
             "nullable": true
           },
           "platform_power_profile": {
@@ -2908,17 +2987,17 @@
           },
           "scheduling_priority": {
             "title": "Scheduling Priority",
-            "type": "integer",
             "maximum": 2147483647,
             "minimum": -2147483648,
+            "type": "integer",
             "nullable": true
           },
           "observation_definitions": {
+            "uniqueItems": true,
             "type": "array",
             "items": {
               "type": "string"
-            },
-            "uniqueItems": true
+            }
           }
         }
       },
@@ -2927,8 +3006,8 @@
         "properties": {
           "epoch": {
             "title": "Epoch",
-            "type": "string",
             "maxLength": 64,
+            "type": "string",
             "nullable": true
           },
           "value": {
@@ -2940,22 +3019,22 @@
       },
       "TrajectoryList": {
         "required": [
-          "name",
-          "mnemonic"
+          "mnemonic",
+          "name"
         ],
         "type": "object",
         "properties": {
           "name": {
             "title": "Name",
-            "type": "string",
             "maxLength": 128,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "mnemonic": {
             "title": "Mnemonic",
-            "type": "string",
             "maxLength": 64,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "id": {
             "title": "ID",
@@ -2971,22 +3050,22 @@
       },
       "Phase": {
         "required": [
-          "name",
-          "mnemonic"
+          "mnemonic",
+          "name"
         ],
         "type": "object",
         "properties": {
           "name": {
             "title": "Name",
-            "type": "string",
             "maxLength": 128,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "mnemonic": {
             "title": "Mnemonic",
-            "type": "string",
             "maxLength": 64,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "start": {
             "title": "Start date",
@@ -3004,23 +3083,23 @@
       },
       "Trajectory": {
         "required": [
-          "name",
           "mnemonic",
+          "name",
           "phases"
         ],
         "type": "object",
         "properties": {
           "name": {
             "title": "Name",
-            "type": "string",
             "maxLength": 128,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "mnemonic": {
             "title": "Mnemonic",
-            "type": "string",
             "maxLength": 64,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "id": {
             "title": "ID",
@@ -3046,8 +3125,8 @@
           "ptr_file": {
             "title": "Ptr file",
             "type": "string",
-            "readOnly": true,
-            "format": "uri"
+            "format": "uri",
+            "readOnly": true
           }
         }
       },
@@ -3060,20 +3139,20 @@
         "properties": {
           "mnemonic": {
             "title": "Mnemonic",
-            "type": "string",
             "maxLength": 64,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "name": {
             "title": "Name",
-            "type": "string",
             "maxLength": 128,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "description": {
             "title": "Description",
-            "type": "string",
             "maxLength": 1024,
+            "type": "string",
             "nullable": true
           },
           "power": {
@@ -3085,22 +3164,22 @@
       },
       "EngineeringSegment": {
         "required": [
-          "start",
-          "end"
+          "end",
+          "start"
         ],
         "type": "object",
         "properties": {
           "start": {
             "title": "Start",
-            "type": "string",
             "maxLength": 50,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "end": {
             "title": "End",
-            "type": "string",
             "maxLength": 50,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "segment_type": {
             "title": "Segment type",
@@ -3121,27 +3200,27 @@
       },
       "SeriesDefinition": {
         "required": [
-          "name",
-          "mnemonic"
+          "mnemonic",
+          "name"
         ],
         "type": "object",
         "properties": {
           "name": {
             "title": "Name",
-            "type": "string",
             "maxLength": 128,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "mnemonic": {
             "title": "Mnemonic",
-            "type": "string",
             "maxLength": 64,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           "unit": {
             "title": "Unit",
-            "type": "string",
             "maxLength": 64,
+            "type": "string",
             "nullable": true
           },
           "category": {
@@ -3151,8 +3230,8 @@
           },
           "description": {
             "title": "Description",
-            "type": "string",
             "maxLength": 1024,
+            "type": "string",
             "nullable": true
           }
         }
@@ -3201,15 +3280,15 @@
       },
       "User": {
         "required": [
-          "working_groups",
-          "instruments"
+          "instruments",
+          "working_groups"
         ],
         "type": "object",
         "properties": {
           "username": {
             "title": "Username",
-            "type": "string",
             "pattern": "^[\\w.@+-]+$",
+            "type": "string",
             "readOnly": true
           },
           "email": {
@@ -3254,11 +3333,18 @@
         "properties": {
           "version": {
             "title": "Version",
-            "type": "string",
             "maxLength": 64,
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           }
         }
+      }
+    },
+    "securitySchemes": {
+      "JWT": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header"
       }
     }
   }

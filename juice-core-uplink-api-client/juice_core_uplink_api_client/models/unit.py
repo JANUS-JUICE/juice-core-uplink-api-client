@@ -13,17 +13,20 @@ class Unit:
     Attributes:
         name (str):
         mnemonic (str):
+        ratio (float):
         category (Union[Unset, str]):
     """
 
     name: str
     mnemonic: str
+    ratio: float
     category: Union[Unset, str] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
         name = self.name
         mnemonic = self.mnemonic
+        ratio = self.ratio
         category = self.category
 
         field_dict: Dict[str, Any] = {}
@@ -32,6 +35,7 @@ class Unit:
             {
                 "name": name,
                 "mnemonic": mnemonic,
+                "ratio": ratio,
             }
         )
         if category is not UNSET:
@@ -46,11 +50,14 @@ class Unit:
 
         mnemonic = d.pop("mnemonic")
 
+        ratio = d.pop("ratio")
+
         category = d.pop("category", UNSET)
 
         unit = cls(
             name=name,
             mnemonic=mnemonic,
+            ratio=ratio,
             category=category,
         )
 

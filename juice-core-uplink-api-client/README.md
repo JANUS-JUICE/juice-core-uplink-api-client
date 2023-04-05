@@ -24,6 +24,7 @@ pip install "git+https://www.ict.inaf.it/gitlab/juice-janus/sht_rest_interface.g
 ```
 
 ## juice-core-uplink-api-client
+
 This module is automatically generated using the command below. It must not be 
 modified manually.
 
@@ -38,8 +39,15 @@ from the root of the repository (where the makefile is located) and requires
 The module is generated from the openapi definition available at 
 https://juicesoc.esac.esa.int/docs/, but **notice** that the openapi.json definition is a modified version of the one 
 available at that link. The file was modified by:
-- updating the file to openapi 3.0
+
+- updating the file to openapi 3.1
 - making several changes to fix inconsistencies in the definition
+
+The original files are mantained here for simplicity:
+
+1. `openapi_source.json` -> as downloaded from [swagger](https://juicesoc.esac.esa.int/docs/)
+2. `openapi_converted.json` -> updated to version 3.x using [https://converter.swagger.io/#/Converter/convertByUrl](swagger converter service)
+3. `openapi.json` -> used to generate the module with openapi-python-client
 
 Also note that only some issues were corrected in the openapi.json file,
 hence the generated module is not complete, and it is not granted to work.
@@ -48,6 +56,7 @@ tracker.
 
 
 ## juice_core 
+
 this module is a wrapper around the automatically generated module. It is made 
 by a class with several methods to interact with the API. It is just a stub to 
 start disucssing the API interface. It is not complete and it is not guaranteed 
@@ -61,6 +70,7 @@ First, create a client:
 from juice_core import SHTRestInterface
 i = SHTRestInterface()
 ```
+
 and access the list of available plans on the server:
 
 ```python
@@ -81,6 +91,7 @@ You can also directly interact with the underalying `juice-core-uplink-api-clien
 
 
 ### juice-core-uplink-api-client
+
 A client library for accessing Juice Core Uplink API
 
 docs at https://juicesoc.esac.esa.int/docs/
@@ -88,6 +99,7 @@ docs at https://juicesoc.esac.esa.int/docs/
 browsable at https://juicesoc.esac.esa.int/readonly_admin/core/
 
 ## Usage
+
 First, create a client:
 
 ```python
@@ -149,6 +161,7 @@ client = AuthenticatedClient(
 
 Things to know:
 1. Every path/method combo becomes a Python module with four functions:
+
     1. `sync`: Blocking request that returns parsed data (if successful) or `None`
     1. `sync_detailed`: Blocking request that always returns a `Request`, optionally with `parsed` set if the request was successful.
     1. `asyncio`: Like `sync` but async instead of blocking
@@ -159,7 +172,9 @@ Things to know:
 1. Any endpoint which did not have a tag will be in `juice_core_uplink_api_client.api.default`
 
 ## Building / publishing this Client
+
 This project uses [Poetry](https://python-poetry.org/) to manage dependencies  and packaging.  Here are the basics:
+
 1. Update the metadata in pyproject.toml (e.g. authors, version)
 1. If you're using a private repository, configure it with Poetry
     1. `poetry config repositories.<your-repository-name> <url-to-your-repository>`
@@ -167,6 +182,7 @@ This project uses [Poetry](https://python-poetry.org/) to manage dependencies  a
 1. Publish the client with `poetry publish --build -r <your-repository-name>` or, if for public PyPI, just `poetry publish --build`
 
 If you want to install this client into another project without publishing it (e.g. for development) then:
+
 1. If that project **is using Poetry**, you can simply do `poetry add <path-to-this-client>` from that project
 1. If that project is not using Poetry:
     1. Build a wheel with `poetry build -f wheel`

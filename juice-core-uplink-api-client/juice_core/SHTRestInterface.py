@@ -49,7 +49,7 @@ def pandas_convertable(func=None, time_fields=[], is_timeseries=False):
     if func is None:
         return partial(pandas_convertable, time_fields=time_fields, is_timeseries=is_timeseries)
 
-    from copy import copy, deepcopy
+    from copy import copy
 
     @merge_args(func)
     def wrapper(*args, as_pandas=True, **kwargs):
@@ -93,7 +93,6 @@ def synchronize_async_helper(to_await):
     coroutine = run_and_capture_result()
     loop.run_until_complete(coroutine)
     return async_response[0]
-
 
 
 @define(auto_attribs=True, eq=False)
@@ -163,14 +162,11 @@ class SHTRestInterface:
         body = json.dumps(q)
         return rest_api_series_list.sync(client=self.client, body=body)
 
-    def series_multi_(self, series_names, trajectory=DEFAULT_TRAJECTORY,
-                           start=DEFAULT_START, end=DEFAULT_END):
-
+    def series_multi_(self, series_names, trajectory=DEFAULT_TRAJECTORY, start=DEFAULT_START, end=DEFAULT_END):
 
         loop = asyncio.get_event_loop()
         coroutine = self.series_multi(series_names, trajectory=trajectory, start=start, end=end)
         return loop.run_until_complete(coroutine)
-
 
     def series_multi(self, series_names, trajectory=DEFAULT_TRAJECTORY, start=DEFAULT_START, end=DEFAULT_END):
         """Retrieve multiple series from the endpoint"""
@@ -182,9 +178,7 @@ class SHTRestInterface:
             got = rest_api_series_list.asyncio(client=self.client, body=body)
             out.append(got)
 
-        return  asyncio.gather(*out)
-
-
+        return asyncio.gather(*out)
 
     @cache
     @pandas_convertable

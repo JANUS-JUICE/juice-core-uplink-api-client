@@ -13,7 +13,7 @@ def _get_kwargs(
     client: Client,
     json_body: Plan,
 ) -> Dict[str, Any]:
-    url = "{}/rest_api/eps_package/".format(client.base_url)
+    url = "{}/rest_api/plan_ptr_skeleton/".format(client.base_url)
 
     headers: Dict[str, str] = client.get_headers()
     cookies: Dict[str, Any] = client.get_cookies()
@@ -44,7 +44,7 @@ def sync_detailed(
     client: Client,
     json_body: Plan,
 ) -> Response[Any]:
-    """Generates a EPS package for a plan
+    """Generates a XML PTR file with the pointing information filled
 
      Adds a new plan to the trajectory
 
@@ -73,7 +73,7 @@ async def asyncio_detailed(
     client: Client,
     json_body: Plan,
 ) -> Response[Any]:
-    """Generates a EPS package for a plan
+    """Generates a XML PTR file with the pointing information filled
 
      Adds a new plan to the trajectory
 

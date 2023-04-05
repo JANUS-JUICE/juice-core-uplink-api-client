@@ -4,17 +4,21 @@ from typing import Any, Dict
 import httpx
 
 from ...client import Client
+from ...models.plan import Plan
 from ...types import Response
 
 
 def _get_kwargs(
     *,
     client: Client,
+    json_body: Plan,
 ) -> Dict[str, Any]:
     url = "{}/rest_api/plan_ptr/".format(client.base_url)
 
     headers: Dict[str, str] = client.get_headers()
     cookies: Dict[str, Any] = client.get_cookies()
+
+    json_json_body = json_body.to_dict()
 
     return {
         "method": "post",
@@ -22,6 +26,7 @@ def _get_kwargs(
         "headers": headers,
         "cookies": cookies,
         "timeout": client.get_timeout(),
+        "json": json_json_body,
     }
 
 
@@ -37,10 +42,14 @@ def _build_response(*, response: httpx.Response) -> Response[Any]:
 def sync_detailed(
     *,
     client: Client,
+    json_body: Plan,
 ) -> Response[Any]:
     """Generates a JSON file with the pointing information filled
 
      Adds a new plan to the trajectory
+
+    Args:
+        json_body (Plan):
 
     Returns:
         Response[Any]
@@ -48,6 +57,7 @@ def sync_detailed(
 
     kwargs = _get_kwargs(
         client=client,
+        json_body=json_body,
     )
 
     response = httpx.request(
@@ -61,10 +71,14 @@ def sync_detailed(
 async def asyncio_detailed(
     *,
     client: Client,
+    json_body: Plan,
 ) -> Response[Any]:
     """Generates a JSON file with the pointing information filled
 
      Adds a new plan to the trajectory
+
+    Args:
+        json_body (Plan):
 
     Returns:
         Response[Any]
@@ -72,6 +86,7 @@ async def asyncio_detailed(
 
     kwargs = _get_kwargs(
         client=client,
+        json_body=json_body,
     )
 
     async with httpx.AsyncClient(verify=client.verify_ssl) as _client:

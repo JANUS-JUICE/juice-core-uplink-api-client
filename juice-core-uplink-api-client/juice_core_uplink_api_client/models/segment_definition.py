@@ -18,6 +18,7 @@ class SegmentDefinition:
     Attributes:
         name (str):
         mnemonic (str):
+        riders (List[str]):
         prime_segment (bool):
         observation_definitions (List[str]):
         description (Union[Unset, None, str]):
@@ -34,6 +35,7 @@ class SegmentDefinition:
 
     name: str
     mnemonic: str
+    riders: List[str]
     prime_segment: bool
     observation_definitions: List[str]
     description: Union[Unset, None, str] = UNSET
@@ -51,6 +53,8 @@ class SegmentDefinition:
     def to_dict(self) -> Dict[str, Any]:
         name = self.name
         mnemonic = self.mnemonic
+        riders = self.riders
+
         prime_segment = self.prime_segment
         observation_definitions = self.observation_definitions
 
@@ -91,6 +95,7 @@ class SegmentDefinition:
             {
                 "name": name,
                 "mnemonic": mnemonic,
+                "riders": riders,
                 "prime_segment": prime_segment,
                 "observation_definitions": observation_definitions,
             }
@@ -127,6 +132,8 @@ class SegmentDefinition:
         name = d.pop("name")
 
         mnemonic = d.pop("mnemonic")
+
+        riders = cast(List[str], d.pop("riders"))
 
         prime_segment = d.pop("prime_segment")
 
@@ -165,6 +172,7 @@ class SegmentDefinition:
         segment_definition = cls(
             name=name,
             mnemonic=mnemonic,
+            riders=riders,
             prime_segment=prime_segment,
             observation_definitions=observation_definitions,
             description=description,
