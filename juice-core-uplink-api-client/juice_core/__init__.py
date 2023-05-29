@@ -10,4 +10,4 @@ from importlib_metadata import version
 __version__ = version("juice-core-uplink-api-client")
 
 
-from .SHTRestInterface import SHTRestInterface
+from .SHTRestInterface import SHTRestInterface, expand_description

@@ -2,7 +2,8 @@ import asyncio
 import json
 import logging
 from functools import cache, partial
-from typing import List, Union
+import re
+from typing import List, Union, Optional
 
 import pandas as pd
 from attrs import define
@@ -28,6 +29,36 @@ DEFAULT_TRAJECTORY = "CREMA_5_1_150lb_23_1"
 DEFAULT_URL = "https://juicesoc.esac.esa.int"
 
 
+def expand_description(tab: pd.DataFrame) -> pd.DataFrame:
+    """Some tables have a description column that contains additional information.
+
+    This function expands the description column into multiple columns.
+
+    Parameters
+    ----------
+    tab (pd.DataFrame): 
+        table to expand, must have a description column
+
+    Returns
+    -------
+    pd.DataFrame: 
+        a new dataframe with the description column expanded
+
+    """
+    additional_columns = []
+    for d in tab.description:
+        values = {}
+        for item in d.split(";"):
+            key, value = item.split("=")
+            values[key.strip()] = value.strip()
+
+        additional_columns.append(values)
+        
+    tab_ = tab.drop(columns=["description"], inplace=False)
+    newd = pd.DataFrame(additional_columns)
+    
+    return tab_.join(newd)
+
 def convert_times(table, columns=[]):
     if isinstance(columns, str):
         columns = [columns]
@@ -36,7 +67,10 @@ def convert_times(table, columns=[]):
         return table
 
     for col in columns:
-        table[col] = pd.to_datetime(table[col]).dt.tz_localize(None)
+        try:
+            table[col] = pd.to_datetime(table[col]).dt.tz_localize(None)
+        except Exception:
+            log.warning(f"Could not convert column {col} to datetime. Maybe is a point event?")
 
     return table
 
@@ -64,6 +98,7 @@ def pandas_convertable(func=None, time_fields=[], is_timeseries=False):
                 series_name = args[1]
 
         result = func(*args, **kwargs)  # call actual function
+        log.debug("Got result from API:\n%s", result)
 
         # convert to pandas if needed
         if as_pandas:
@@ -101,7 +136,7 @@ class SHTRestInterface:
     Main entry point for interacting with the Juice Core Uplink API
     """
 
-    client: [None, Client] = None
+    client: Optional[Client] = None
     timeout: float = 40.0
 
     def __attrs_post_init__(self):
