@@ -169,11 +169,14 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "type": "array",
+                  "items": {
                   "$ref": "#/components/schemas/DetailedScenarioList"
                 }
               }
             }
           }
+        }
         }
       },
       "post": {
@@ -310,7 +313,15 @@
             "content": {}
           }
         }
+      },
+      "parameters": [{
+        "name": "body",
+        "in": "query",
+        "required": true,
+        "schema": {
+          "type": "string"
       }
+      }]
     },
     "/rest_api/file/{filename}/": {
       "get": {
@@ -436,11 +447,14 @@
             "content": {
               "application/json": {
                 "schema": {
+                    "type": "array",
+                    "items": {
                   "$ref": "#/components/schemas/PlanList"
                 }
               }
             }
           }
+        }
         }
       },
       "post": {
@@ -813,7 +827,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SimphonyPlan"
+                  "$ref": "#/components/schemas/SimphonyPlanSwagger"
                 }
               }
             }
@@ -878,7 +892,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SimphonyPlan"
+                  "$ref": "#/components/schemas/SimphonyPlanSwagger"
                 }
               }
             }
@@ -943,7 +957,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SimphonyPlan"
+                  "$ref": "#/components/schemas/SimphonyPlanSwagger"
                 }
               }
             }
@@ -1028,7 +1042,15 @@
             "content": {}
           }
         }
+      },
+      "parameters": [{
+        "name": "body",
+        "in": "query",
+        "required": true,
+        "schema": {
+          "type": "string"
       }
+      }]
     },
     "/rest_api/session_flush/": {
       "get": {
@@ -1120,9 +1142,12 @@
             "content": {
               "application/json": {
                 "schema": {
+                    "type": "array",
+                    "items": {
                   "$ref": "#/components/schemas/DetailedScenarioList"
                 }
               }
+            }
             }
           },
           "404": {
@@ -2006,6 +2031,19 @@
             "maxLength": 128,
             "type": "string",
             "nullable": true
+          },
+          "prime": {
+            "title": "Prime",
+            "type": "string",
+            "nullable": true
+          },
+          "riders": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "nullable": true
+            }
           }
         }
       },
@@ -2792,7 +2830,7 @@
           }
         }
       },
-      "SpiceKernel": {
+      "KernelFile": {
         "required": [
           "mnemonic",
           "name",
@@ -2820,7 +2858,33 @@
           }
         }
       },
-      "SimphonyPlan": {
+      "SpiceInfoSwagger": {
+        "required": [
+          "kernels",
+          "metakernel",
+          "skd_version"
+        ],
+        "type": "object",
+        "properties": {
+          "kernels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KernelFile"
+            }
+          },
+          "skd_version": {
+            "title": "Skd version",
+            "minLength": 1,
+            "type": "string"
+          },
+          "metakernel": {
+            "title": "Metakernel",
+            "minLength": 1,
+            "type": "string"
+          }
+        }
+      },
+      "SimphonyPlanSwagger": {
         "required": [
           "default_block",
           "default_slew_policy",
@@ -2830,7 +2894,7 @@
           "mnemonic",
           "segment_opportunities",
           "segment_timeline",
-          "skd_version",
+          "spice_info",
           "trajectory"
         ],
         "type": "object",
@@ -2871,10 +2935,10 @@
               "$ref": "#/components/schemas/Segment"
             }
           },
-          "kernels": {
+          "spice_info": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/SpiceKernel"
+              "$ref": "#/components/schemas/SpiceInfoSwagger"
             }
           },
           "skd_version": {

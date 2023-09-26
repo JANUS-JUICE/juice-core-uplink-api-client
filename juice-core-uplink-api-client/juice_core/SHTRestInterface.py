@@ -2,8 +2,7 @@ import asyncio
 import json
 import logging
 from functools import cache, partial
-import re
-from typing import List, Union, Optional
+from typing import List, Optional, Union
 
 import pandas as pd
 from attrs import define
@@ -13,6 +12,7 @@ from juice_core_uplink_api_client.api.rest_api import (
     rest_api_events_list,
     rest_api_plan_list,
     rest_api_plan_read,
+    rest_api_segment_definition_read,
     rest_api_series_list,
     rest_api_trajectory_engineering_segments_list,
     rest_api_trajectory_event_list,
@@ -29,35 +29,36 @@ DEFAULT_TRAJECTORY = "CREMA_5_1_150lb_23_1"
 DEFAULT_URL = "https://juicesoc.esac.esa.int"
 
 
-def expand_description(tab: pd.DataFrame) -> pd.DataFrame:
+def expand_column(tab: pd.DataFrame, column_name="description") -> pd.DataFrame:
     """Some tables have a description column that contains additional information.
 
     This function expands the description column into multiple columns.
 
     Parameters
     ----------
-    tab (pd.DataFrame): 
+    tab (pd.DataFrame):
         table to expand, must have a description column
 
     Returns
     -------
-    pd.DataFrame: 
+    pd.DataFrame:
         a new dataframe with the description column expanded
 
     """
     additional_columns = []
-    for d in tab.description:
+    for d in tab[column_name]:
         values = {}
         for item in d.split(";"):
             key, value = item.split("=")
             values[key.strip()] = value.strip()
 
         additional_columns.append(values)
-        
-    tab_ = tab.drop(columns=["description"], inplace=False)
+
+    tab_ = tab.drop(columns=[column_name], inplace=False)
     newd = pd.DataFrame(additional_columns)
-    
+
     return tab_.join(newd)
+
 
 def convert_times(table, columns=[]):
     if isinstance(columns, str):
@@ -70,7 +71,9 @@ def convert_times(table, columns=[]):
         try:
             table[col] = pd.to_datetime(table[col]).dt.tz_localize(None)
         except Exception:
-            log.warning(f"Could not convert column {col} to datetime. Maybe is a point event?")
+            log.warning(
+                f"Could not convert column {col} to datetime. Maybe is a point event?"
+            )
 
     return table
 
@@ -79,9 +82,16 @@ def table_to_timeseries(table, name=None):
     return pd.Series(data=table.value.values, index=table.epoch.values, name=name)
 
 
-def pandas_convertable(func=None, time_fields=[], is_timeseries=False):
+def pandas_convertable(
+    func=None, time_fields=[], is_timeseries=False, expand_fields=[]
+):
     if func is None:
-        return partial(pandas_convertable, time_fields=time_fields, is_timeseries=is_timeseries)
+        return partial(
+            pandas_convertable,
+            time_fields=time_fields,
+            is_timeseries=is_timeseries,
+            expand_fields=expand_fields,
+        )
 
     from copy import copy
 
@@ -103,8 +113,15 @@ def pandas_convertable(func=None, time_fields=[], is_timeseries=False):
         # convert to pandas if needed
         if as_pandas:
             table = convert_times(
-                pd.DataFrame([d.to_dict() if hasattr(d, "to_dict") else d for d in result]), columns=time_fields_
+                pd.DataFrame(
+                    [d.to_dict() if hasattr(d, "to_dict") else d for d in result]
+                ),
+                columns=time_fields_,
             )
+
+            for f in expand_fields:
+                log.debug("Expanding column %s", f)
+                table = expand_column(table, column_name=f)
 
             if is_timeseries:
                 return table_to_timeseries(table, name=series_name)
@@ -171,7 +188,9 @@ class SHTRestInterface:
     @pandas_convertable(time_fields=["start", "end"])
     def engineering_segments(self, trajectory=DEFAULT_TRAJECTORY) -> pd.DataFrame:
         """Retrieve the engineering segments for a mnemonic"""
-        return rest_api_trajectory_engineering_segments_list.sync(mnemonic=trajectory, client=self.client)
+        return rest_api_trajectory_engineering_segments_list.sync(
+            mnemonic=trajectory, client=self.client
+        )
 
     @cache
     @pandas_convertable
@@ -185,29 +204,57 @@ class SHTRestInterface:
     @pandas_convertable
     def known_series(self, trajectory=DEFAULT_TRAJECTORY):
         """Retrieve all the series available on the endpoint"""
-        return rest_api_trajectory_series_list.sync(client=self.client, mnemonic=trajectory)
+        return rest_api_trajectory_series_list.sync(
+            client=self.client, mnemonic=trajectory
+        )
 
     @cache
     @pandas_convertable(is_timeseries=True)
-    def series(self, series_name, trajectory=DEFAULT_TRAJECTORY, start=DEFAULT_START, end=DEFAULT_END):
+    def series(
+        self,
+        series_name,
+        trajectory=DEFAULT_TRAJECTORY,
+        start=DEFAULT_START,
+        end=DEFAULT_END,
+    ):
         """Retrieve a serie from the endpoint"""
 
-        q = dict(start=str(start), end=str(end), trajectory=trajectory, series=series_name)
+        q = dict(
+            start=str(start), end=str(end), trajectory=trajectory, series=series_name
+        )
 
         body = json.dumps(q)
         return rest_api_series_list.sync(client=self.client, body=body)
 
-    def series_multi_(self, series_names, trajectory=DEFAULT_TRAJECTORY, start=DEFAULT_START, end=DEFAULT_END):
-
+    def series_multi_(
+        self,
+        series_names,
+        trajectory=DEFAULT_TRAJECTORY,
+        start=DEFAULT_START,
+        end=DEFAULT_END,
+    ):
         loop = asyncio.get_event_loop()
-        coroutine = self.series_multi(series_names, trajectory=trajectory, start=start, end=end)
+        coroutine = self.series_multi(
+            series_names, trajectory=trajectory, start=start, end=end
+        )
         return loop.run_until_complete(coroutine)
 
-    def series_multi(self, series_names, trajectory=DEFAULT_TRAJECTORY, start=DEFAULT_START, end=DEFAULT_END):
+    def series_multi(
+        self,
+        series_names,
+        trajectory=DEFAULT_TRAJECTORY,
+        start=DEFAULT_START,
+        end=DEFAULT_END,
+    ):
         """Retrieve multiple series from the endpoint"""
         out = []
         for series_name in series_names:
-            q = dict(start=str(start), end=str(end), trajectory=trajectory, series=series_name)
+            q = dict(
+                start=str(start),
+                end=str(end),
+                trajectory=trajectory,
+                series=series_name,
+            )
 
             body = json.dumps(q)
             got = rest_api_series_list.asyncio(client=self.client, body=body)
@@ -219,10 +266,22 @@ class SHTRestInterface:
     @pandas_convertable
     def event_types(self, trajectory=DEFAULT_TRAJECTORY):
         """Retrieve all the events applicable for a trajectory"""
-        return rest_api_trajectory_event_list.sync(client=self.client, mnemonic=trajectory)
+        return rest_api_trajectory_event_list.sync(
+            client=self.client, mnemonic=trajectory
+        )
 
     @cache
-    @pandas_convertable(time_fields=["start", "end"])
+    def segment_definition(self, mnemonic):
+        return rest_api_segment_definition_read.sync(
+            client=self.client, mnemonic=mnemonic
+        )
+
+    @pandas_convertable
+    def segment_definitions(self, mnemonics: List[str]):
+        return [self.segment_definition(m) for m in mnemonics]
+
+    @cache
+    @pandas_convertable(time_fields=["start", "end"], expand_fields=["description"])
     def events(
         self,
         mnemonics: Union[List[str], str] = [],
@@ -239,7 +298,9 @@ class SHTRestInterface:
             mnemonics = [m.name for m in mnemonics]
             log.info(f"Retrieving all known events {mnemonics}")
 
-        q = dict(start=str(start), end=str(end), trajectory=trajectory, mnemonics=mnemonics)
+        q = dict(
+            start=str(start), end=str(end), trajectory=trajectory, mnemonics=mnemonics
+        )
 
         body = json.dumps(q)
         return rest_api_events_list.sync(client=self.client, body=body)

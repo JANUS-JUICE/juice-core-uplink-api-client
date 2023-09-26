@@ -2683,8 +2683,7 @@
         "required": [
           "instrument_resources",
           "mnemonic",
-          "name",
-          "resources"
+          "name"
         ],
         "type": "object",
         "properties": {
@@ -2928,9 +2927,7 @@
         "required": [
           "mnemonic",
           "name",
-          "observation_definitions",
-          "prime_segment",
-          "riders"
+          "prime_segment"
         ],
         "type": "object",
         "properties": {

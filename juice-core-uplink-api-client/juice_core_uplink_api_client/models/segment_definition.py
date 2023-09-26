@@ -18,46 +18,42 @@ class SegmentDefinition:
     Attributes:
         name (str):
         mnemonic (str):
-        riders (List[str]):
         prime_segment (bool):
-        observation_definitions (List[str]):
         description (Union[Unset, None, str]):
         resources (Union[Unset, None, List['ResourceProfile']]):
         instrument_resources (Union[Unset, None, List['InstrumentResourceProfile']]):
         group (Union[Unset, str]):
+        riders (Union[Unset, List[str]]):
         pointing_request_file (Union[Unset, None, str]):
         slew_policy (Union[Unset, str]):
         pointing_target (Union[Unset, None, str]):
         platform_power_profile (Union[Unset, str]):
         scheduler_flag (Union[Unset, None, bool]):
         scheduling_priority (Union[Unset, None, int]):
+        observation_definitions (Union[Unset, List[str]]):
     """
 
     name: str
     mnemonic: str
-    riders: List[str]
     prime_segment: bool
-    observation_definitions: List[str]
     description: Union[Unset, None, str] = UNSET
     resources: Union[Unset, None, List["ResourceProfile"]] = UNSET
     instrument_resources: Union[Unset, None, List["InstrumentResourceProfile"]] = UNSET
     group: Union[Unset, str] = UNSET
+    riders: Union[Unset, List[str]] = UNSET
     pointing_request_file: Union[Unset, None, str] = UNSET
     slew_policy: Union[Unset, str] = UNSET
     pointing_target: Union[Unset, None, str] = UNSET
     platform_power_profile: Union[Unset, str] = UNSET
     scheduler_flag: Union[Unset, None, bool] = UNSET
     scheduling_priority: Union[Unset, None, int] = UNSET
+    observation_definitions: Union[Unset, List[str]] = UNSET
     additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
         name = self.name
         mnemonic = self.mnemonic
-        riders = self.riders
-
         prime_segment = self.prime_segment
-        observation_definitions = self.observation_definitions
-
         description = self.description
         resources: Union[Unset, None, List[Dict[str, Any]]] = UNSET
         if not isinstance(self.resources, Unset):
@@ -82,12 +78,19 @@ class SegmentDefinition:
                     instrument_resources.append(instrument_resources_item)
 
         group = self.group
+        riders: Union[Unset, List[str]] = UNSET
+        if not isinstance(self.riders, Unset):
+            riders = self.riders
+
         pointing_request_file = self.pointing_request_file
         slew_policy = self.slew_policy
         pointing_target = self.pointing_target
         platform_power_profile = self.platform_power_profile
         scheduler_flag = self.scheduler_flag
         scheduling_priority = self.scheduling_priority
+        observation_definitions: Union[Unset, List[str]] = UNSET
+        if not isinstance(self.observation_definitions, Unset):
+            observation_definitions = self.observation_definitions
 
         field_dict: Dict[str, Any] = {}
         field_dict.update(self.additional_properties)
@@ -95,9 +98,7 @@ class SegmentDefinition:
             {
                 "name": name,
                 "mnemonic": mnemonic,
-                "riders": riders,
                 "prime_segment": prime_segment,
-                "observation_definitions": observation_definitions,
             }
         )
         if description is not UNSET:
@@ -108,6 +109,8 @@ class SegmentDefinition:
             field_dict["instrument_resources"] = instrument_resources
         if group is not UNSET:
             field_dict["group"] = group
+        if riders is not UNSET:
+            field_dict["riders"] = riders
         if pointing_request_file is not UNSET:
             field_dict["pointing_request_file"] = pointing_request_file
         if slew_policy is not UNSET:
@@ -120,6 +123,8 @@ class SegmentDefinition:
             field_dict["scheduler_flag"] = scheduler_flag
         if scheduling_priority is not UNSET:
             field_dict["scheduling_priority"] = scheduling_priority
+        if observation_definitions is not UNSET:
+            field_dict["observation_definitions"] = observation_definitions
 
         return field_dict
 
@@ -133,11 +138,7 @@ class SegmentDefinition:
 
         mnemonic = d.pop("mnemonic")
 
-        riders = cast(List[str], d.pop("riders"))
-
         prime_segment = d.pop("prime_segment")
-
-        observation_definitions = cast(List[str], d.pop("observation_definitions"))
 
         description = d.pop("description", UNSET)
 
@@ -157,6 +158,8 @@ class SegmentDefinition:
 
         group = d.pop("group", UNSET)
 
+        riders = cast(List[str], d.pop("riders", UNSET))
+
         pointing_request_file = d.pop("pointing_request_file", UNSET)
 
         slew_policy = d.pop("slew_policy", UNSET)
@@ -169,22 +172,24 @@ class SegmentDefinition:
 
         scheduling_priority = d.pop("scheduling_priority", UNSET)
 
+        observation_definitions = cast(List[str], d.pop("observation_definitions", UNSET))
+
         segment_definition = cls(
             name=name,
             mnemonic=mnemonic,
-            riders=riders,
             prime_segment=prime_segment,
-            observation_definitions=observation_definitions,
             description=description,
             resources=resources,
             instrument_resources=instrument_resources,
             group=group,
+            riders=riders,
             pointing_request_file=pointing_request_file,
             slew_policy=slew_policy,
             pointing_target=pointing_target,
             platform_power_profile=platform_power_profile,
             scheduler_flag=scheduler_flag,
             scheduling_priority=scheduling_priority,
+            observation_definitions=observation_definitions,
         )
 
         segment_definition.additional_properties = d

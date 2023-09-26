@@ -2,8 +2,8 @@ from enum import Enum
 
 
 class InstrumentMembershipType(str, Enum):
-    PI = "PI"
     MEMBER = "MEMBER"
+    PI = "PI"
 
     def __str__(self) -> str:
         return str(self.value)
