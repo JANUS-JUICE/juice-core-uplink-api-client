@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING, Any, Dict, List, Type, TypeVar, Union
 
-import attr
+from attrs import define as _attrs_define
+from attrs import field as _attrs_field
 
 from ..types import UNSET, Unset
 
@@ -12,33 +13,27 @@ if TYPE_CHECKING:
 T = TypeVar("T", bound="ReadOnlySegmentGroup")
 
 
-@attr.s(auto_attribs=True)
+@_attrs_define
 class ReadOnlySegmentGroup:
     """
     Attributes:
         name (str):
         mnemonic (str):
-        instrument_resources (List['ReadOnlyInstrumentResourceProfile']):
         resources (Union[Unset, List['ReadOnlyResourceProfile']]):
+        instrument_resources (Union[Unset, List['ReadOnlyInstrumentResourceProfile']]):
         platform_power_profile (Union[Unset, int]):
     """
 
     name: str
     mnemonic: str
-    instrument_resources: List["ReadOnlyInstrumentResourceProfile"]
     resources: Union[Unset, List["ReadOnlyResourceProfile"]] = UNSET
+    instrument_resources: Union[Unset, List["ReadOnlyInstrumentResourceProfile"]] = UNSET
     platform_power_profile: Union[Unset, int] = UNSET
-    additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
+    additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
         name = self.name
         mnemonic = self.mnemonic
-        instrument_resources = []
-        for instrument_resources_item_data in self.instrument_resources:
-            instrument_resources_item = instrument_resources_item_data.to_dict()
-
-            instrument_resources.append(instrument_resources_item)
-
         resources: Union[Unset, List[Dict[str, Any]]] = UNSET
         if not isinstance(self.resources, Unset):
             resources = []
@@ -46,6 +41,14 @@ class ReadOnlySegmentGroup:
                 resources_item = resources_item_data.to_dict()
 
                 resources.append(resources_item)
+
+        instrument_resources: Union[Unset, List[Dict[str, Any]]] = UNSET
+        if not isinstance(self.instrument_resources, Unset):
+            instrument_resources = []
+            for instrument_resources_item_data in self.instrument_resources:
+                instrument_resources_item = instrument_resources_item_data.to_dict()
+
+                instrument_resources.append(instrument_resources_item)
 
         platform_power_profile = self.platform_power_profile
 
@@ -55,11 +58,12 @@ class ReadOnlySegmentGroup:
             {
                 "name": name,
                 "mnemonic": mnemonic,
-                "instrument_resources": instrument_resources,
             }
         )
         if resources is not UNSET:
             field_dict["resources"] = resources
+        if instrument_resources is not UNSET:
+            field_dict["instrument_resources"] = instrument_resources
         if platform_power_profile is not UNSET:
             field_dict["platform_power_profile"] = platform_power_profile
 
@@ -75,13 +79,6 @@ class ReadOnlySegmentGroup:
 
         mnemonic = d.pop("mnemonic")
 
-        instrument_resources = []
-        _instrument_resources = d.pop("instrument_resources")
-        for instrument_resources_item_data in _instrument_resources:
-            instrument_resources_item = ReadOnlyInstrumentResourceProfile.from_dict(instrument_resources_item_data)
-
-            instrument_resources.append(instrument_resources_item)
-
         resources = []
         _resources = d.pop("resources", UNSET)
         for resources_item_data in _resources or []:
@@ -89,13 +86,20 @@ class ReadOnlySegmentGroup:
 
             resources.append(resources_item)
 
+        instrument_resources = []
+        _instrument_resources = d.pop("instrument_resources", UNSET)
+        for instrument_resources_item_data in _instrument_resources or []:
+            instrument_resources_item = ReadOnlyInstrumentResourceProfile.from_dict(instrument_resources_item_data)
+
+            instrument_resources.append(instrument_resources_item)
+
         platform_power_profile = d.pop("platform_power_profile", UNSET)
 
         read_only_segment_group = cls(
             name=name,
             mnemonic=mnemonic,
-            instrument_resources=instrument_resources,
             resources=resources,
+            instrument_resources=instrument_resources,
             platform_power_profile=platform_power_profile,
         )
 

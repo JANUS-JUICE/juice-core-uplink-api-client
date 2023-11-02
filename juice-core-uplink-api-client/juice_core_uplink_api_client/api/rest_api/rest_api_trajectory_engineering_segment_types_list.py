@@ -4,33 +4,26 @@ from typing import Any, Dict, List, Optional, Union, cast
 import httpx
 
 from ... import errors
-from ...client import Client
+from ...client import AuthenticatedClient, Client
 from ...models.engineering_segment_type import EngineeringSegmentType
 from ...types import Response
 
 
 def _get_kwargs(
     mnemonic: str,
-    *,
-    client: Client,
 ) -> Dict[str, Any]:
-    url = "{}/rest_api/trajectory/{mnemonic}/engineering_segment_types".format(client.base_url, mnemonic=mnemonic)
-
-    headers: Dict[str, str] = client.get_headers()
-    cookies: Dict[str, Any] = client.get_cookies()
+    pass
 
     return {
         "method": "get",
-        "url": url,
-        "headers": headers,
-        "cookies": cookies,
-        "timeout": client.get_timeout(),
-        "follow_redirects": client.follow_redirects,
+        "url": "/rest_api/trajectory/{mnemonic}/engineering_segment_types".format(
+            mnemonic=mnemonic,
+        ),
     }
 
 
 def _parse_response(
-    *, client: Client, response: httpx.Response
+    *, client: Union[AuthenticatedClient, Client], response: httpx.Response
 ) -> Optional[Union[Any, List["EngineeringSegmentType"]]]:
     if response.status_code == HTTPStatus.OK:
         response_200 = []
@@ -51,7 +44,7 @@ def _parse_response(
 
 
 def _build_response(
-    *, client: Client, response: httpx.Response
+    *, client: Union[AuthenticatedClient, Client], response: httpx.Response
 ) -> Response[Union[Any, List["EngineeringSegmentType"]]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
@@ -64,7 +57,7 @@ def _build_response(
 def sync_detailed(
     mnemonic: str,
     *,
-    client: Client,
+    client: Union[AuthenticatedClient, Client],
 ) -> Response[Union[Any, List["EngineeringSegmentType"]]]:
     """Retrieve the engineering segments belonging to the trajectory
 
@@ -83,11 +76,9 @@ def sync_detailed(
 
     kwargs = _get_kwargs(
         mnemonic=mnemonic,
-        client=client,
     )
 
-    response = httpx.request(
-        verify=client.verify_ssl,
+    response = client.get_httpx_client().request(
         **kwargs,
     )
 
@@ -97,7 +88,7 @@ def sync_detailed(
 def sync(
     mnemonic: str,
     *,
-    client: Client,
+    client: Union[AuthenticatedClient, Client],
 ) -> Optional[Union[Any, List["EngineeringSegmentType"]]]:
     """Retrieve the engineering segments belonging to the trajectory
 
@@ -123,7 +114,7 @@ def sync(
 async def asyncio_detailed(
     mnemonic: str,
     *,
-    client: Client,
+    client: Union[AuthenticatedClient, Client],
 ) -> Response[Union[Any, List["EngineeringSegmentType"]]]:
     """Retrieve the engineering segments belonging to the trajectory
 
@@ -142,11 +133,9 @@ async def asyncio_detailed(
 
     kwargs = _get_kwargs(
         mnemonic=mnemonic,
-        client=client,
     )
 
-    async with httpx.AsyncClient(verify=client.verify_ssl) as _client:
-        response = await _client.request(**kwargs)
+    response = await client.get_async_httpx_client().request(**kwargs)
 
     return _build_response(client=client, response=response)
 
@@ -154,7 +143,7 @@ async def asyncio_detailed(
 async def asyncio(
     mnemonic: str,
     *,
-    client: Client,
+    client: Union[AuthenticatedClient, Client],
 ) -> Optional[Union[Any, List["EngineeringSegmentType"]]]:
     """Retrieve the engineering segments belonging to the trajectory
 

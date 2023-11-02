@@ -4,35 +4,29 @@ from typing import Any, Dict, Optional, Union, cast
 import httpx
 
 from ... import errors
-from ...client import Client
+from ...client import AuthenticatedClient, Client
 from ...models.detailed_scenario import DetailedScenario
 from ...types import Response
 
 
 def _get_kwargs(
     *,
-    client: Client,
     json_body: DetailedScenario,
 ) -> Dict[str, Any]:
-    url = "{}/rest_api/detailed_scenario/".format(client.base_url)
-
-    headers: Dict[str, str] = client.get_headers()
-    cookies: Dict[str, Any] = client.get_cookies()
+    pass
 
     json_json_body = json_body.to_dict()
 
     return {
         "method": "post",
-        "url": url,
-        "headers": headers,
-        "cookies": cookies,
-        "timeout": client.get_timeout(),
-        "follow_redirects": client.follow_redirects,
+        "url": "/rest_api/detailed_scenario/",
         "json": json_json_body,
     }
 
 
-def _parse_response(*, client: Client, response: httpx.Response) -> Optional[Union[Any, DetailedScenario]]:
+def _parse_response(
+    *, client: Union[AuthenticatedClient, Client], response: httpx.Response
+) -> Optional[Union[Any, DetailedScenario]]:
     if response.status_code == HTTPStatus.CREATED:
         response_201 = DetailedScenario.from_dict(response.json())
 
@@ -46,7 +40,9 @@ def _parse_response(*, client: Client, response: httpx.Response) -> Optional[Uni
         return None
 
 
-def _build_response(*, client: Client, response: httpx.Response) -> Response[Union[Any, DetailedScenario]]:
+def _build_response(
+    *, client: Union[AuthenticatedClient, Client], response: httpx.Response
+) -> Response[Union[Any, DetailedScenario]]:
     return Response(
         status_code=HTTPStatus(response.status_code),
         content=response.content,
@@ -57,7 +53,7 @@ def _build_response(*, client: Client, response: httpx.Response) -> Response[Uni
 
 def sync_detailed(
     *,
-    client: Client,
+    client: Union[AuthenticatedClient, Client],
     json_body: DetailedScenario,
 ) -> Response[Union[Any, DetailedScenario]]:
     """Adds a new detailed scenario
@@ -76,12 +72,10 @@ def sync_detailed(
     """
 
     kwargs = _get_kwargs(
-        client=client,
         json_body=json_body,
     )
 
-    response = httpx.request(
-        verify=client.verify_ssl,
+    response = client.get_httpx_client().request(
         **kwargs,
     )
 
@@ -90,7 +84,7 @@ def sync_detailed(
 
 def sync(
     *,
-    client: Client,
+    client: Union[AuthenticatedClient, Client],
     json_body: DetailedScenario,
 ) -> Optional[Union[Any, DetailedScenario]]:
     """Adds a new detailed scenario
@@ -116,7 +110,7 @@ def sync(
 
 async def asyncio_detailed(
     *,
-    client: Client,
+    client: Union[AuthenticatedClient, Client],
     json_body: DetailedScenario,
 ) -> Response[Union[Any, DetailedScenario]]:
     """Adds a new detailed scenario
@@ -135,19 +129,17 @@ async def asyncio_detailed(
     """
 
     kwargs = _get_kwargs(
-        client=client,
         json_body=json_body,
     )
 
-    async with httpx.AsyncClient(verify=client.verify_ssl) as _client:
-        response = await _client.request(**kwargs)
+    response = await client.get_async_httpx_client().request(**kwargs)
 
     return _build_response(client=client, response=response)
 
 
 async def asyncio(
     *,
-    client: Client,
+    client: Union[AuthenticatedClient, Client],
     json_body: DetailedScenario,
 ) -> Optional[Union[Any, DetailedScenario]]:
     """Adds a new detailed scenario

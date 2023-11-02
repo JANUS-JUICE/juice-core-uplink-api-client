@@ -1,7 +1,8 @@
 import datetime
 from typing import Any, Dict, List, Type, TypeVar, Union
 
-import attr
+from attrs import define as _attrs_define
+from attrs import field as _attrs_field
 from dateutil.parser import isoparse
 
 from ..types import UNSET, Unset
@@ -9,7 +10,7 @@ from ..types import UNSET, Unset
 T = TypeVar("T", bound="Phase")
 
 
-@attr.s(auto_attribs=True)
+@_attrs_define
 class Phase:
     """
     Attributes:
@@ -23,7 +24,7 @@ class Phase:
     mnemonic: str
     start: Union[Unset, None, datetime.datetime] = UNSET
     end: Union[Unset, None, datetime.datetime] = UNSET
-    additional_properties: Dict[str, Any] = attr.ib(init=False, factory=dict)
+    additional_properties: Dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
         name = self.name

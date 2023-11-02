@@ -2681,7 +2681,6 @@
       },
       "ReadOnlySegmentGroup": {
         "required": [
-          "instrument_resources",
           "mnemonic",
           "name"
         ],
