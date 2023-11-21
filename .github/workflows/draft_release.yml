@@ -15,6 +15,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: ./.github/actions/python-poetry-env
       - name: Update version
+        working-directory: ./juice-core-uplink-api-client
         id: updated_version
         shell: bash
         run: |
@@ -22,6 +23,7 @@ jobs:
           version=$(poetry version --short)
           echo ::set-output name="version::$version"
       - name: Update changelog
+        working-directory: ./juice-core-uplink-api-client
         id: changelog
         shell: bash
         run: |

@@ -14,8 +14,10 @@ runs:
       with:
         python-version: ${{inputs.python-version}}
     - name: Install poetry
+      working-directory: ./juice-core-uplink-api-client
       run: python -m pip install poetry
       shell: bash
     - name: Create virtual environment
+      working-directory: ./juice-core-uplink-api-client
       run: poetry install
       shell: bash
