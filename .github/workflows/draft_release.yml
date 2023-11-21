@@ -50,5 +50,5 @@ jobs:
         with:
           tag_name: ${{ steps.updated_version.outputs.version }}
           release_name: Release ${{ steps.updated_version.outputs.version }}
-          body: ${{ steps.changelog.outputs.body }}
+          #body: ${{ steps.changelog.outputs.body }} # disabled body as changelog is not computed
           draft: true
