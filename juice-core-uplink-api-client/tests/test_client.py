@@ -27,7 +27,7 @@ def test_engineering_segments():
     assert len(segs) > 0
 
 
-def test_serie():
+def test_series():
     series = client.known_series()
     name = series.loc[0]["mnemonic"]
     serie = client.series(name)

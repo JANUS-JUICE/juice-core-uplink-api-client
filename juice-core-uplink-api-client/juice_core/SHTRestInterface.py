@@ -263,7 +263,7 @@ class SHTRestInterface:
         return [self.segment_definition(m) for m in mnemonics]
 
     @cache
-    @pandas_convertable(time_fields=["start", "end"], expand_fields=["description"])
+    @pandas_convertable(time_fields=["start", "end"])
     def events(
         self,
         mnemonics: Union[List[str], str] = [],
