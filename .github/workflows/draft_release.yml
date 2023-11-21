@@ -37,7 +37,8 @@ jobs:
       - name: Commit changes
         uses: EndBug/add-and-commit@v7
         with:
-          add: 'CHANGELOG.md pyproject.toml'
+          add: 'pyproject.toml' # CHANGELOG.md for now is removed
+          working-directory: ./juice-core-uplink-api-client
           message: 'Release ${{ steps.updated_version.outputs.version }}'
       - name: Create tag
         run: |
