@@ -314,14 +314,16 @@
           }
         }
       },
-      "parameters": [{
-        "name": "body",
-        "in": "query",
-        "required": true,
-        "schema": {
-          "type": "string"
+      "parameters": [
+        {
+          "name": "body",
+          "in": "query",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
         }
-      }]
+      ]
     },
     "/rest_api/file/{filename}/": {
       "get": {
@@ -447,11 +449,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/PlanList"
-                    }
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PlanList"
                   }
+                }
               }
             }
           }
@@ -1043,14 +1045,16 @@
           }
         }
       },
-      "parameters": [{
-        "name": "body",
-        "in": "query",
-        "required": true,
-        "schema": {
-          "type": "string"
+      "parameters": [
+        {
+          "name": "body",
+          "in": "query",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
         }
-      }]
+      ]
     },
     "/rest_api/session_flush/": {
       "get": {
@@ -1142,11 +1146,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/DetailedScenarioList"
-                    }
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DetailedScenarioList"
                   }
+                }
               }
             }
           },
