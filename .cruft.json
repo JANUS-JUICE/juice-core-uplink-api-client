@@ -1,0 +1,18 @@
+{
+  "template": "https://github.com/luca-penasa/wolt-python-package-cookiecutter",
+  "commit": "8e7f426afcd6c8e7b2c869007c8d25ce604cc45b",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "author_name": "Luca Penasa",
+      "author_email": "luca.penasa@inaf.it",
+      "github_username": "JANUS-JUICE",
+      "project_name": "juice-core",
+      "project_slug": "juice-core",
+      "package_name": "juice_core",
+      "project_short_description": "A client library for accessing Juice Core Uplink API",
+      "_template": "https://github.com/luca-penasa/wolt-python-package-cookiecutter"
+    }
+  },
+  "directory": null
+}
