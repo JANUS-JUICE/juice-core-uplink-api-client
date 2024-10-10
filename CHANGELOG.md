@@ -5,6 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+## 0.2.8 - 2024-10-10
 ### Changed
-- overall reworking to streamline the generation of the api client. 
+- overall reworking to streamline the generation of the api client.
 - Adopted wolt template (personal fork)
