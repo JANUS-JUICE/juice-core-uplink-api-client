@@ -11,7 +11,7 @@ log.disable("juice_core")
 
 from importlib_metadata import version
 
-__version__ = version("juice_core")
+__version__ = version("juice_core_uplink_api_client")
 
 
 from .SHTRestInterface import SHTRestInterface, expand_column

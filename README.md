@@ -101,8 +101,6 @@ as the CI is not yet configured for publish on pypi it can be done by hand:
 ```bash
 poetry publish --build
 
-
-
 ```
 #### Automatic release - to be fixed
 
