@@ -5,6 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+## 0.2.9 - 2024-10-10
 ### Fixed
 - previous version did not have correct metadata.
 
