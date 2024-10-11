@@ -1,0 +1,10 @@
+# Changes here will be overwritten by Copier
+_commit: daa488b
+_src_path: git@github.com:luca-penasa/wolt-python-package-cookiecutter.git
+author_email: luca.penasa@inaf.it
+author_name: Luca Penasa
+github_username: JANUS-JUICE
+module_name: juice_core_uplink_api_client
+project_name: juice-core-uplink-api-client
+project_short_desription: <Project Description>
+project_url_slug: juice-core-uplink-api-client

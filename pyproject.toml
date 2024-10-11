@@ -24,19 +24,20 @@ classifiers = [
 ]
 
 packages = [
-    { include = "juice_core", from = "src" },
     { include = "juice_core_uplink_api_client", from = "src" },
+    { include = "juice_core", from = "src" },
 ]
 
 [tool.poetry.dependencies]
 python = ">=3.10, <4.0"
+importlib-metadata = "^8.5.0"
+loguru = "^0.7.2"
 pydantic = "^2.9.2"
 httpx = "^0.27.2"
-importlib-metadata = "^8.5.0"
 pandas = "^2.2.3"
 attrs = "^24.2.0"
 merge-args = "^0.1.5"
-loguru = "^0.7.2"
+
 
 [tool.poetry.group.dev.dependencies]
 mkdocstrings = { version = ">=0.23", extras = ["python"] }
@@ -51,6 +52,7 @@ pytest-sugar = "^1.0.0"
 python-kacl = "*"
 ruff = ">=0.2.0"
 ipykernel = "^6.29.5"
+nbmake = ">=1.4.6"
 
 [build-system]
 requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning>=1.0.0,<2.0.0"]
@@ -98,10 +100,11 @@ classmethod-decorators = [
 
 [tool.pytest.ini_options]
 addopts = """\
-    --cov juice_core \
+    --cov juice_core \    
     --cov tests \
     --cov-report term-missing \
     --no-cov-on-fail \
+    --nbmake \
 """
 
 [tool.coverage.report]

@@ -57,7 +57,7 @@ You can also directly interact with the underalying `juice-core-uplink-api-clien
 * Clone this repository
 * Requirements:
   * [Poetry](https://python-poetry.org/)
-  * Python 3.8+
+  * Python 3.10+
 * Create a virtual environment and install the dependencies
 
 ```sh
@@ -81,8 +81,9 @@ pytest
 The documentation is automatically generated from the content of the [docs directory](https://github.com/JANUS-JUICE/juice-core-uplink-api-client/tree/master/docs) and from the docstrings
  of the public signatures of the source code. The documentation is updated and published as a [Github Pages page](https://pages.github.com/) automatically as part each release.
 
-### Releasing
 
+
+### Releasing
 
 #### Manual release
 
@@ -100,9 +101,9 @@ as the CI is not yet configured for publish on pypi it can be done by hand:
 
 ```bash
 poetry publish --build
-
 ```
 #### Automatic release - to be fixed
+
 
 Trigger the [Draft release workflow](https://github.com/JANUS-JUICE/juice-core-uplink-api-client/actions/workflows/draft_release.yml)
 (press _Run workflow_). This will update the changelog & version and create a GitHub release which is in _Draft_ state.
@@ -137,6 +138,4 @@ pre-commit run --all-files
 
 ---
 
-This project was generated using the [wolt-python-package-cookiecutter](https://github.com/woltapp/wolt-python-package-cookiecutter) template.
-
-
+This project was generated using [a fork](https://github.com/luca-penasa/wolt-python-package-cookiecutter) of the [wolt-python-package-cookiecutter](https://github.com/woltapp/wolt-python-package-cookiecutter) template.

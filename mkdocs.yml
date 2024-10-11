@@ -1,5 +1,5 @@
-site_name: "juice-core"
-repo_url: https://github.com/JANUS-JUICE/juice-core
+site_name: "juice-core-uplink-api-client"
+repo_url: https://github.com/JANUS-JUICE/juice-core-uplink-api-client
 
 theme:
   name: material
