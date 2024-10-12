@@ -90,7 +90,7 @@ The documentation is automatically generated from the content of the [docs direc
 Releases are done with the command, e.g. incrementing patch:
 
 ```bash
-poetry run kacl-cli release -t -c $(poetry version --dry-run  -s patch) -m
+poetry run just bump patch
 # also push, of course:
 git push origin main --tags
 ```
