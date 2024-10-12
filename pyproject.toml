@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "juice-core-uplink-api-client"
 version = "0.2.9"
-description = ""
+description = "A client library for accessing Juice Core Uplink API"
 authors = ["Luca Penasa <luca.penasa@inaf.it>"]
 license = "MIT"
 readme = "README.md"
