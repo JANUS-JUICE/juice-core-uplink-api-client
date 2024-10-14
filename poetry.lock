@@ -1156,19 +1156,6 @@ docs = ["myst-parser", "pydata-sphinx-theme", "sphinx-autodoc-typehints", "sphin
 test = ["ipykernel", "pre-commit", "pytest (<8)", "pytest-cov", "pytest-timeout"]
 
 [[package]]
-name = "just-bin"
-version = "1.26.0"
-description = "A thin wrapper to distribute https://github.com/casey/just via pip."
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "just_bin-1.26.0-py3-none-macosx_10_9_x86_64.whl", hash = "sha256:93c42adbbaa756d05946e5c62a9f75aadaca64ee18b65979a64745f45790daf8"},
-    {file = "just_bin-1.26.0-py3-none-macosx_11_0_arm64.whl", hash = "sha256:9af05ac2bc0250395c3b27b75112a4bcdef375375e74b17ca733bd996677153d"},
-    {file = "just_bin-1.26.0-py3-none-manylinux_2_12_x86_64.manylinux2010_x86_64.musllinux_1_1_x86_64.whl", hash = "sha256:8782afdedcc2b676448db58746bd509ae391cf0f7361ff32f93be76c33e9e637"},
-    {file = "just_bin-1.26.0-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.musllinux_1_1_aarch64.whl", hash = "sha256:6f75b8f0a8522fb7d5ec58376f9d56e5f5ad1b6844e39248b8afbfffbff4dd0b"},
-]
-
-[[package]]
 name = "kiwisolver"
 version = "1.4.7"
 description = "A fast implementation of the Cassowary constraint solver"
@@ -3280,6 +3267,30 @@ files = [
 ]
 
 [[package]]
+name = "rust-just"
+version = "1.36.0"
+description = "🤖 Just a command runner"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "rust_just-1.36.0-py3-none-macosx_10_12_x86_64.whl", hash = "sha256:b3bd511b681bcf5a7acc44134571e9016f70811b69f951395d876f8c605a0dbc"},
+    {file = "rust_just-1.36.0-py3-none-macosx_11_0_arm64.whl", hash = "sha256:4af6c6f4a5560bf6992624b994c590fa4cd4e5c6ace06e912c092456db76605d"},
+    {file = "rust_just-1.36.0-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:c93cfacdd8ee0b37e4991d26e10636c4bebc1a5034e5dc7aa5ceb60c52deb594"},
+    {file = "rust_just-1.36.0-py3-none-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:887a691b986e529db9441f219824743d3954869c5714c4193c99cdddd45a017a"},
+    {file = "rust_just-1.36.0-py3-none-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:931c2645b55fbab70e646846613fcad0daa4fbd70e96d22f5a4be7c6898cb101"},
+    {file = "rust_just-1.36.0-py3-none-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:bc771bb42be9f84e71e4796dfdf01f80f5c061d9c8065e375d0d54dda0177391"},
+    {file = "rust_just-1.36.0-py3-none-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:5edcc088acfb6d3d5dc6912e742133ff0909d07b5db2f4874648078ccfb44e94"},
+    {file = "rust_just-1.36.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:24aaa7b9defd41e020c62431b6bf068bdabe57c2938659ce7f513555dc98c100"},
+    {file = "rust_just-1.36.0-py3-none-musllinux_1_2_aarch64.whl", hash = "sha256:da69002d29f88796543787c3bd7a42643ce4a94b83b8e52ee87e27d98e6707d6"},
+    {file = "rust_just-1.36.0-py3-none-musllinux_1_2_armv7l.whl", hash = "sha256:c63f525cc8521c7dd912f68ae74a44f91ffc411cbadf4b7711ca508dde78c17a"},
+    {file = "rust_just-1.36.0-py3-none-musllinux_1_2_i686.whl", hash = "sha256:31d1f4f654ee8995d0223abc4306c28c6f771ea1fa8df60154d1e93ceb16be09"},
+    {file = "rust_just-1.36.0-py3-none-musllinux_1_2_x86_64.whl", hash = "sha256:a6e2194f6c01a152aa8d55e10f092e581000360f74de3d59eb288628c033cf7a"},
+    {file = "rust_just-1.36.0-py3-none-win32.whl", hash = "sha256:24e362a56104d2ff20b9116a4ea8d907ddaba9915c4714d3fc5a7936133961c3"},
+    {file = "rust_just-1.36.0-py3-none-win_amd64.whl", hash = "sha256:8556842d70d49ab4872ba179d375f3eba0473e00f11da07b2ca7391e3e6ecf96"},
+    {file = "rust_just-1.36.0.tar.gz", hash = "sha256:9e1dd70afdc23f7c1223ec90213e4186113a6d2c85179576dc12d2930ca3b1b5"},
+]
+
+[[package]]
 name = "semver"
 version = "3.0.2"
 description = "Python helper for Semantic Versioning (https://semver.org)"
@@ -3603,4 +3614,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10, <4.0"
-content-hash = "c38fe7b7b32c78e2cdf5375aabd3207d0d4ce032dc7037b9390c4f6dff6dfdd0"
+content-hash = "715d4cfe8d58e7b2d171664b05880125769f323a6b5b462fd3c03f07bf494e33"
